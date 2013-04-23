@@ -158,7 +158,9 @@ class EmailValidator extends Validator {
 	 * @return true|string True if the value was valid, or an error message if not.
 	 */
 	public static function validate( $arg ) {
-		return ($arg !== '' &&filter_var( $arg, FILTER_VALIDATE_EMAIL )) ||
+		if ( strlen($arg) > 255 )
+			return 'Your email address must be less than 255 characters (for storage reasons).';
+		return ($arg !== '' && filter_var( $arg, FILTER_VALIDATE_EMAIL )) ||
 			'Your email address does not appear to be valid.';
 	}
 }
@@ -243,6 +245,8 @@ class NameValidator extends Validator {
 	 * @return true|string True if the value was valid, or an error message if not.
 	 */
 	protected static function validate_name( $arg, $type ) {
+		if ( strlen($arg) > 255 )
+			return "Your $type name must be less than 255 characters (for storage reasons).";
 		return ($arg !== '' && preg_match('/^[[:graph:]][[:print:]]*$/', $arg)) ||
 			"$type must be only printable characters, and atleast 1 printable character long.\n".
 			"It may not start with a space.";
