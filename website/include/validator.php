@@ -134,17 +134,17 @@ class Validator {
 
 
 // default includes
-// generated: dir /a /b *-validator.include.php
+// generated: dir /a /b *-validator.php
 // TODO: autoload
-require_once('city-validator.include.php');
-require_once('email-validator.include.php');
-require_once('firstname-validator.include.php');
-require_once('lastname-validator.include.php');
-require_once('name-validator.include.php');
-require_once('password-validator.include.php');
-require_once('smartystreet-validator.include.php');
-require_once('state-validator.include.php');
-require_once('username-validator.include.php');
-require_once('zip-validator.include.php');
+require_once('city-validator.php');
+require_once('email-validator.php');
+require_once('firstname-validator.php');
+require_once('lastname-validator.php');
+require_once('name-validator.php');
+require_once('password-validator.php');
+require_once('smartystreet-validator.php');
+require_once('state-validator.php');
+require_once('username-validator.php');
+require_once('zip-validator.php');
 
 ?>

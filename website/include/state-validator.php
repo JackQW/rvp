@@ -1,18 +1,21 @@
 <?
-require_once('validator.include.php');
+require_once('validator.php');
+require_once('us-states.php');
 
 /**
- * Validates a password.
- * @see PasswordValidator::validate($arg)
+ * Validates a state.
+ *
+ * @author Tyler B. Young
+ * @see StateValidator::validate($arg)
  */
-class PasswordValidator extends Validator {
+class StateValidator extends Validator {
 	/**
 	 * Registers the class in the validator factory.
 	 * Uses late static binding to returns field type.
 	 * Call by init on parent {@link Validator} class.
 	 */
 	protected static function __init() {
-		return "Password";
+		return "State";
 	}
 
 	/**
@@ -23,22 +26,23 @@ class PasswordValidator extends Validator {
 	public function __construct( $field, $val = null ) {
 		parent::__construct($field, $val);
 	}
+	
 
 	/**
-	 * Validates a password. Allows all characters.
+	 * Validates a 2-letter ANSI uppercase state code.
+	 * Does not validate the state's formal name.
 	 *
-	 * @example Derp de derp!1
+	 * @example SC
 	 * @param string $arg The value to validate.
 	 * @return true|string True if the value was valid, or an error message if not.
 	 */
 	public static function validate( $arg ) {
-		return ( $arg !== '' && preg_match('/^(?=[[:digit:]])(?=[[:upper:]])(?=[[:lower:]])(?=[[:punct:]]).{7,}$/', $arg) ) ? true :
-			"Your password does not meet the security requirements.\n".
-			"Please use at least 1 digit, 1 uppercase, 1 lowercase, and 1 punctuation characters.\n".
-			"Your password must be at least 7 total characters in length.";
+		return US_States::isState($arg) ? true :
+			'Sorry, the state you specified is not a valid known state.';
 	}
 }
 
-PasswordValidator::init();
+StateValidator::init();
+
 
 ?>

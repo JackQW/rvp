@@ -1,5 +1,5 @@
 <?
-require_once('validator.include.php');
+require_once('validator.php');
 
 /**
  * Validates an email address.

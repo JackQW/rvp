@@ -1,10 +1,5 @@
 <?
-require_once('validator.include.php');
-
-// TODO: move these into a config file or something
-define('SMARTYSTREET_AUTH_ID', '4f1dc143-5dd3-440d-ab15-977aa759c001');
-define('SMARTYSTREET_AUTH_TOKEN', 'imFvFTg8mF0Ka0321Ejg5c2yykLzYxVHDrosWsAwG8SNWAXfMx/7sVH9wNhBaybSgWDoq6Q5kAKOhrM7Yh1r+Q==');
-
+require_once('validator.php');
 
 /**
  * Validates a city, state, and zip combination.
@@ -118,52 +113,53 @@ class SmartyStreetValidator extends Validator {
 		//$query = http_build_query($params);
 		// "https://api.smartystreets.com/zipcode?$query"
 
-		/* Curl doesn't seem to be working for me; php_curl.dll just fails to load.
+		if ( function_exists( 'curl_init' ) ) {
+			// cURL module route
 
-		$c = curl_init('https://api.smartystreets.com/zipcode');
-		curl_setopt_array( $c, array(
-				CURLOPT_RETURNTRANSFER => true,
-				CURLOPT_HTTPHEADER => array('Content-type: application/json'),
-				CURLOPT_POSTFIELDS => $post_input
-			) );
+			$c = curl_init('https://api.smartystreets.com/zipcode');
+			curl_setopt_array( $c, array(
+					CURLOPT_RETURNTRANSFER => true,
+					CURLOPT_HTTPHEADER => array('Content-type: application/json'),
+					CURLOPT_POSTFIELDS => $post_input
+				) );
 
-		echo "smartystreet performing request x\n";
+			echo "smartystreet performing request x\n";
 
-		// perform the post, get the result
-		$result_json = curl_exec($c);
-		//*/
+			// perform the post, get the result
+			$result_json = curl_exec($c);
+			
+		} else if ( class_exists( 'HTTPRequest' ) ) {
+			// PECL HTTPRequest route
 
-		/* PECL route (can't find extension):
+			$post_input = json_encode( $params );
 
-		$post_input = json_encode( $params );
+			// referenced code:
+			// https://github.com/smartystreets/LiveAddressSamples/blob/master/php/post_optimized_pecl.php
 
-		// referenced code:
-		// https://github.com/smartystreets/LiveAddressSamples/blob/master/php/post_optimized_pecl.php
+			// TODO: exception handling!
+			$req = new HTTPRequest('https://api.smartystreets.com/zipcode', HTTP_METH_POST);
+			$req->setBody($post_input);
 
-		// TODO: exception handling!
-		$req = new HTTPRequest('https://api.smartystreets.com/zipcode', HTTP_METH_POST);
-		$req->setBody($post_input);
+			echo "smartystreet performing request x\n";
 
-		echo "smartystreet performing request x\n";
+			$resp = $req->send();
+			$result_json = $resp->getBody();
 
-		$resp = $req->send();
-		$result_json = $resp->getBody();
-		*/
+		} else {
+			// streaming context route; requires openssl support built into php!
 
-		/* F*ck can't get Curl or PECL to work! And THIS requires openssl support built into php!
+			// http://www.php.net/manual/en/context.http.php
+			$ctx = stream_context_create( array (
+					'http' => array (
+						'method' => 'POST',
+						'header' => 'Content-Type: application/json\r\n',
+						'content' => $post_input,
+					),
+				) );
 
-		// http://www.php.net/manual/en/context.http.php
-		$ctx = stream_context_create( array (
-				'http' => array (
-					'method' => 'POST',
-					'header' => 'Content-Type: application/json\r\n',
-					'content' => $post_input,
-				),
-			) );
+			$result_json = file_get_contents( "https://api.smartystreets.com/zipcode", false, $ctx );
 
-		$result_json = file_get_contents( "https://api.smartystreets.com/zipcode", false, $ctx );
-
-		*/
+		}
 		die("ffs!");
 
 

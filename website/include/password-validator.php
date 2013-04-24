@@ -1,20 +1,18 @@
 <?
-require_once('validator.include.php');
+require_once('validator.php');
 
 /**
- * Validates a zip code.
- *
- * @author Tyler B. Young
- * @see ZipValidator::validate($arg)
+ * Validates a password.
+ * @see PasswordValidator::validate($arg)
  */
-class ZipValidator extends Validator {
+class PasswordValidator extends Validator {
 	/**
 	 * Registers the class in the validator factory.
 	 * Uses late static binding to returns field type.
 	 * Call by init on parent {@link Validator} class.
 	 */
 	protected static function __init() {
-		return "Zip";
+		return "Password";
 	}
 
 	/**
@@ -25,21 +23,22 @@ class ZipValidator extends Validator {
 	public function __construct( $field, $val = null ) {
 		parent::__construct($field, $val);
 	}
-	
+
 	/**
-	 * Validates a zip (or zip+4) code.
+	 * Validates a password. Allows all characters.
 	 *
-	 * @example 90210-1010
-	 * @link http://stackoverflow.com/questions/160550/zip-code-us-postal-code-validation
+	 * @example Derp de derp!1
 	 * @param string $arg The value to validate.
 	 * @return true|string True if the value was valid, or an error message if not.
 	 */
 	public static function validate( $arg ) {
-		return ($arg !== '' &&preg_match('/(^\d{5}$)|(^\d{5}-\d{4}$)/', $arg)) ? true :
-			'Zip codes must be a series of 5 numbers, optionally followed by a dash and 4 more numbers.';
+		return ( $arg !== '' && preg_match('/^(?=[[:digit:]])(?=[[:upper:]])(?=[[:lower:]])(?=[[:punct:]]).{7,}$/', $arg) ) ? true :
+			"Your password does not meet the security requirements.\n".
+			"Please use at least 1 digit, 1 uppercase, 1 lowercase, and 1 punctuation characters.\n".
+			"Your password must be at least 7 total characters in length.";
 	}
 }
 
-ZipValidator::init();
+PasswordValidator::init();
 
 ?>

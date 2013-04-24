@@ -1,18 +1,20 @@
 <?
-require_once('validator.include.php');
+require_once('validator.php');
 
 /**
- * Validates a username.
- * @see UserNameValidator::validate($arg)
+ * Validates a zip code.
+ *
+ * @author Tyler B. Young
+ * @see ZipValidator::validate($arg)
  */
-class UserNameValidator extends Validator {
+class ZipValidator extends Validator {
 	/**
 	 * Registers the class in the validator factory.
 	 * Uses late static binding to returns field type.
 	 * Call by init on parent {@link Validator} class.
 	 */
 	protected static function __init() {
-		return "UserName";
+		return "Zip";
 	}
 
 	/**
@@ -23,21 +25,21 @@ class UserNameValidator extends Validator {
 	public function __construct( $field, $val = null ) {
 		parent::__construct($field, $val);
 	}
-
+	
 	/**
-	 * Validates a username. Allows up to 16 uppercase, lowercase, number, and underscore characters.
+	 * Validates a zip (or zip+4) code.
 	 *
+	 * @example 90210-1010
+	 * @link http://stackoverflow.com/questions/160550/zip-code-us-postal-code-validation
 	 * @param string $arg The value to validate.
 	 * @return true|string True if the value was valid, or an error message if not.
 	 */
 	public static function validate( $arg ) {
-		// 16 characters; letters numbers underscores
-		return ($arg !== '' && preg_match('/^[[:word:]]{1,16}$/', $arg )) ? true :
-			"Your username must be between 1 and 16 characters (inclusive).\n".
-			"Allowed characters are letters (upper and lowercase) and numbers.";
+		return ($arg !== '' &&preg_match('/(^\d{5}$)|(^\d{5}-\d{4}$)/', $arg)) ? true :
+			'Zip codes must be a series of 5 numbers, optionally followed by a dash and 4 more numbers.';
 	}
 }
 
-UserNameValidator::init();
+ZipValidator::init();
 
 ?>

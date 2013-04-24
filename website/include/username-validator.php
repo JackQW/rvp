@@ -1,20 +1,18 @@
 <?
-require_once('validator.include.php');
+require_once('validator.php');
 
 /**
- * Validates a city name.
- *
- * @author Tyler B. Young
- * @see CityValidator::validate($arg)
+ * Validates a username.
+ * @see UserNameValidator::validate($arg)
  */
-class CityValidator extends Validator {
+class UserNameValidator extends Validator {
 	/**
 	 * Registers the class in the validator factory.
 	 * Uses late static binding to returns field type.
 	 * Call by init on parent {@link Validator} class.
 	 */
 	protected static function __init() {
-		return "City";
+		return "UserName";
 	}
 
 	/**
@@ -25,20 +23,21 @@ class CityValidator extends Validator {
 	public function __construct( $field, $val = null ) {
 		parent::__construct($field, $val);
 	}
-	
+
 	/**
-	 * Validates a city. Allows letters and spaces.
+	 * Validates a username. Allows up to 16 uppercase, lowercase, number, and underscore characters.
 	 *
-	 * @example New York
 	 * @param string $arg The value to validate.
 	 * @return true|string True if the value was valid, or an error message if not.
 	 */
 	public static function validate( $arg ) {
-		return ($arg !== '' && preg_match('/^[[:alpha:]][[:alpha:] ]*$/', $arg)) ? true :
-			'City must be only letters and spaces, and atleast 1 non-space character long.';
+		// 16 characters; letters numbers underscores
+		return ($arg !== '' && preg_match('/^[[:word:]]{1,16}$/', $arg )) ? true :
+			"Your username must be between 1 and 16 characters (inclusive).\n".
+			"Allowed characters are letters (upper and lowercase) and numbers.";
 	}
 }
 
-CityValidator::init();
+UserNameValidator::init();
 
 ?>

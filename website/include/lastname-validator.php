@@ -1,20 +1,20 @@
 <?
-require_once('name-validator.include.php');
+require_once('name-validator.php');
 
 /**
- * Validates a first name.
+ * Validates a last name.
  *
  * @author Tyler B. Young
- * @see FirstNameValidator::validate($arg)
+ * @see LastNameValidator::validate($arg)
  */
-class FirstNameValidator extends NameValidator {
+class LastNameValidator extends NameValidator {
 	/**
 	 * Registers the class in the validator factory.
 	 * Uses late static binding to returns field type.
 	 * Call by init on parent {@link Validator} class.
 	 */
 	protected static function __init() {
-		return "FirstName";
+		return "LastName";
 	}
 
 	/**
@@ -27,9 +27,9 @@ class FirstNameValidator extends NameValidator {
 	}
 	
 	/**
-	 * Validates a first name. Allows all printable characters.
+	 * Validates a last name. Allows all printable characters.
 	 *
-	 * @example John-Chris
+	 * @example O'Farley VI
 	 * @param string $arg The value to validate.
 	 * @return true|string True if the value was valid, or an error message if not.
 	 */
@@ -38,6 +38,6 @@ class FirstNameValidator extends NameValidator {
 	}
 }
 
-FirstNameValidator::init();
+LastNameValidator::init();
 
 ?>

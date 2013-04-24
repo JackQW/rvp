@@ -2,7 +2,7 @@
 	session_start();
 
 
-	require_once('include/us-states.include.php');
+	require_once('include/us-states.php');
 
 	header("Content-Type: application/xhtml+xml; charset=utf-8");
 	header("Vary: Accept");

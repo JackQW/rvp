@@ -1,15 +1,12 @@
 <?
-define('MYSQL_HOST', 'localhost');
-define('MYSQL_USER', 'root');
-define('MYSQL_PASS', '');
-define('PASSWORD_HASH_SALT','aXK0)@@4z$*1');
 session_start();
 
 $_SESSION['server_status'] = '';
 // get current time
 $start_processing = microtime(true);
 
-require_once("include/validator.include.php");
+require_once("include/config.php");
+require_once("include/validator.php");
 
 $valid = true;
 foreach ( array(
