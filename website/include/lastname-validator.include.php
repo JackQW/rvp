@@ -1,5 +1,5 @@
 <?
-require_once('validator.include.php');
+require_once('name-validator.include.php');
 
 /**
  * Validates a last name.
@@ -13,7 +13,7 @@ class LastNameValidator extends NameValidator {
 	 * Uses late static binding to returns field type.
 	 * Call by init on parent {@link Validator} class.
 	 */
-	protected static function init() {
+	public static function init() {
 		return "LastName";
 	}
 
@@ -22,7 +22,7 @@ class LastNameValidator extends NameValidator {
 	 *
 	 * @see Validator::__construct($field, $value)
 	 */
-	public __constructor( $field, $val = null ) {
+	public function __constructor( $field, $val = null ) {
 		parent::__construct($field, $val);
 	}
 	

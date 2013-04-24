@@ -13,7 +13,7 @@ class EmailValidator extends Validator {
 	 * Uses late static binding to returns field type.
 	 * Call by init on parent {@link Validator} class.
 	 */
-	protected static function init() {
+	public static function init() {
 		return "Email";
 	}
 
@@ -22,7 +22,7 @@ class EmailValidator extends Validator {
 	 *
 	 * @see Validator::__construct($field, $value)
 	 */
-	public __constructor( $field, $val = null ) {
+	public function __constructor( $field, $val = null ) {
 		parent::__construct($field, $val);
 	}
 	

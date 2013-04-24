@@ -16,7 +16,7 @@ class SmartyStreetValidator extends Validator {
 	 * Uses late static binding to returns field type.
 	 * Call by init on parent {@link Validator} class.
 	 */
-	protected static function init() {
+	public static function init() {
 		return "SmartyStreet";
 	}
 
@@ -39,7 +39,7 @@ class SmartyStreetValidator extends Validator {
 	 *
 	 * @see Validator::__construct($field, $value)
 	 */
-	public __constructor($field, $params = null) {
+	public function __constructor($field, $params = null) {
 		if ( is_array( $params ) )
 			maybe_add_auth_params( $params );
 		else throw new Exception('Syntax error; $params is not an array.');
@@ -71,7 +71,7 @@ class SmartyStreetValidator extends Validator {
 	 * @param string $zip The zip code to validate.
 	 * @return true|string True if the value was valid, or an error message if not.
 	 */
-	public static validate( $params ) {
+	public static function validate( $params ) {
 		if ( is_array( $params ) )
 			maybe_add_auth_params( $params );
 

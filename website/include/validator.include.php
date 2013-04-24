@@ -64,7 +64,7 @@ class Validator {
 	 * @param string $field A field name to use for feedback.
 	 * @param mixed $val A value to be validated.
 	 */
-	protected __constructor( $field, $val = null ) {
+	protected function __constructor( $field, $val = null ) {
 		if ( !is_string($fieldName) || $fieldName === '' )
 			return; // possibly a special validator
 		$fieldName = $field;
