@@ -27,7 +27,7 @@ function request_input_value( $field ) {
 function display_feedback( $field, $format = null ) {
 	if ( isset($_SESSION[$field]) && !empty($_SESSION[$field]) ) {
 		if ( is_string($format) && !empty($format) ) {
-			?><span><? printf( $format, $_SESSION[$field] ); ?></span><?
+			?><span data-debug="<?= $field; ?>"><? printf( $format, $_SESSION[$field] ); ?></span><?
 		} else {
 			?><span><?= $_SESSION[$field]; ?></span><?
 		}
@@ -66,12 +66,18 @@ function display_feedback( $field, $format = null ) {
 				<input type="text" name="lastname" autocomplete="family-name" placeholder="Last Name" required="true" <? request_input_value("lastname"); ?> />
 				<input type="text" name="city" autocomplete="city" placeholder="City" required="true" <? request_input_value("city"); ?> />
 				<select name="state" autocomplete="state" required="true">
-				<?
+					<option></option><? // hardcode blank option
+
 					$states = US_States::getStates();
-					foreach ( $state as $states ) {
-						?><option value="<?= $state; ?>" <?
-							if ( isset($_REQUEST['state']) && $_REQUEST['state'] == $state )
-								?>selected="true"<?
+					$rstate = '';
+					if ( isset($_REQUEST['state']) )
+						$rstate = $_REQUEST['state'];
+
+					foreach ( $states as $state) {
+						?><option value="<?= $state; ?>"<?
+							if ( $rstate === $state ) {
+								?> selected="true"<?
+							}
 						?>><?= $state; ?></option><?
 					}
 				?>
@@ -79,6 +85,7 @@ function display_feedback( $field, $format = null ) {
 				<input type="text" name="zip" autocomplete="postal-code" placeholder="Zip Code" required="true" <? request_input_value("zip"); ?> />
 				<input type="email" name="email" autocomplete="email" placeholder="Email Address" required="true" <? request_input_value("email"); ?> />
 				<input type="text" name="username" autocomplete="nickname" placeholder="User Name" required="true" <? request_input_value("username"); ?> />
+				<input type="submit" value="Register" />
 			</form>
 		</div>
 	</body>

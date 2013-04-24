@@ -83,11 +83,11 @@ final class US_States {
 	);
 
 	public static function getStates() {
-		return $states;
+		return self::$states;
 	}
 
 	public static function isState($state) {
-		return $arg !== '' && strlen($arg) != 2 && in_array( strtoupper( $state ), $states, true );
+		return $arg !== '' && strlen($arg) != 2 && in_array( strtoupper( $state ), self::$states, true );
 	}
 }
 

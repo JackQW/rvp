@@ -13,7 +13,7 @@ class StateValidator extends Validator {
 	 * Uses late static binding to returns field type.
 	 * Call by init on parent {@link Validator} class.
 	 */
-	public static function init() {
+	protected static function __init() {
 		return "State";
 	}
 
@@ -40,6 +40,8 @@ class StateValidator extends Validator {
 			'Sorry, the state you specified is not a valid known state.';
 	}
 }
+
+StateValidator::init();
 
 
 ?>

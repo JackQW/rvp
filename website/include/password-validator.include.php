@@ -11,7 +11,7 @@ class PasswordValidator extends Validator {
 	 * Uses late static binding to returns field type.
 	 * Call by init on parent {@link Validator} class.
 	 */
-	public static function init() {
+	protected static function __init() {
 		return "Password";
 	}
 
@@ -39,5 +39,7 @@ class PasswordValidator extends Validator {
 			"Your password must be at least 7 total characters in length.";
 	}
 }
+
+PasswordValidator::init();
 
 ?>

@@ -11,7 +11,7 @@ class UserNameValidator extends Validator {
 	 * Uses late static binding to returns field type.
 	 * Call by init on parent {@link Validator} class.
 	 */
-	public static function init() {
+	protected static function __init() {
 		return "UserName";
 	}
 
@@ -37,5 +37,7 @@ class UserNameValidator extends Validator {
 			"Allowed characters are letters (upper and lowercase) and numbers.";
 	}
 }
+
+UserNameValidator::init();
 
 ?>

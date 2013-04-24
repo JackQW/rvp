@@ -13,7 +13,7 @@ class CityValidator extends Validator {
 	 * Uses late static binding to returns field type.
 	 * Call by init on parent {@link Validator} class.
 	 */
-	public static function init() {
+	protected static function __init() {
 		return "City";
 	}
 
@@ -38,5 +38,7 @@ class CityValidator extends Validator {
 			'City must be only letters and spaces, and atleast 1 non-space character long.';
 	}
 }
+
+CityValidator::init();
 
 ?>

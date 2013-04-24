@@ -16,7 +16,7 @@ class SmartyStreetValidator extends Validator {
 	 * Uses late static binding to returns field type.
 	 * Call by init on parent {@link Validator} class.
 	 */
-	public static function init() {
+	protected static function __init() {
 		return "SmartyStreet";
 	}
 
@@ -143,6 +143,8 @@ class SmartyStreetValidator extends Validator {
 	}
 
 }
+
+SmartyStreetValidator::init();
 
 
 ?>

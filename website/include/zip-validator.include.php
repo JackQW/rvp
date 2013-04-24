@@ -13,7 +13,7 @@ class ZipValidator extends Validator {
 	 * Uses late static binding to returns field type.
 	 * Call by init on parent {@link Validator} class.
 	 */
-	public static function init() {
+	protected static function __init() {
 		return "Zip";
 	}
 
@@ -39,5 +39,7 @@ class ZipValidator extends Validator {
 			'Zip codes must be a series of 5 numbers, optionally followed by a dash and 4 more numbers.';
 	}
 }
+
+ZipValidator::init();
 
 ?>

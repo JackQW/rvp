@@ -13,7 +13,7 @@ class FirstNameValidator extends NameValidator {
 	 * Uses late static binding to returns field type.
 	 * Call by init on parent {@link Validator} class.
 	 */
-	public static function init() {
+	protected static function __init() {
 		return "FirstName";
 	}
 
@@ -37,5 +37,7 @@ class FirstNameValidator extends NameValidator {
 		return validate_name( $arg, 'Last name' );
 	}
 }
+
+FirstNameValidator::init();
 
 ?>

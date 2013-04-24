@@ -21,11 +21,13 @@ foreach ( array(
 		Validator::getValidator("State", "state" ),
 		Validator::getValidator("Zip", "zip" ),
 		Validator::getValidator("SmartyStreet", "smartystreet", array(
-				'city' => $_REQUEST['city'],
-				'state' => $_REQUEST['state'],
-				'zipcode' => $_REQUEST['zip'],
+				'city' => isset($_REQUEST['city']) ? $_REQUEST['city'] : '',
+				'state' => isset($_REQUEST['state']) ? $_REQUEST['state'] : '',
+				'zipcode' => isset($_REQUEST['zip']) ? $_REQUEST['zip'] : '',
 			) ),
 		) as $field => $validator ) {
+	if ( !is_object( $validator ) )
+		die( "$field: ". serialize($validator) );
 	if ( $validator->valid() !== true )
 		$valid = false;
 }

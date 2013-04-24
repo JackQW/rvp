@@ -11,10 +11,14 @@ class Validator {
 	 * Uses late static binding to call init on referenced subclass.
 	 * Referenced subclass returns field type.
 	 */
-	static function init() {
+	protected static function __init() {
 		$className = get_called_class();
-		if ( method_exists($className,'init') )
-			$validatorClasses[$className] = static::init();
+		if ( $className !== get_class() )
+			self::$validatorClasses[$className] = static::__init();
+	}
+
+	public static function init() {
+		self::__init();
 	}
 
 	static $validatorClasses = array();
@@ -50,8 +54,12 @@ class Validator {
 	 * @param mixed $val A value to be validated.
 	 */
 	static function getValidator( $type, $field, $val = null ) {
-		$class = array_search( $validatorClasses, $type, true );
-		if ( $class === false ) return false;
+		$class = array_search( $type, self::$validatorClasses, true );
+		if ( $class === false ) {
+			echo "'$type' is not a registered validator.\nRegistered validator types:\n";
+			print_r(self::$validatorClasses);
+			die();
+		}
 		return new $class( $field, $val );
 	}
 
@@ -114,6 +122,7 @@ class Validator {
 		return $result;
 	}
 }
+
 
 // default includes
 // generated: dir /a /b *-validator.include.php
