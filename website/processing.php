@@ -25,41 +25,59 @@ for ( array(
 		$valid = false;
 }
 
-$end_processing = microtime(true);
-$processing_time = $end_processing - $start_processing;
 
 $_SESSION['server_status'] = true;
+$success = false;
 
 if ( $valid ) {
 	// TODO: sql registration
 	$db = @new mysqli( 'p:localhost', MYSQL_USER, MYSQL_PASS, 'proj4rv');
+
 	if ( $db->connect_errno !== 0 ) {
 		// TODO: handle connect failure
 	}
-	if (!($stmt = $db->prepare('INSERT INTO `proj4rv`.`user` (`username`, `password`, `email`, `first_name`, `last_name`, `city`, `state`, `zip`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);')) {
+
+	if (!($istmt = $db->prepare('INSERT INTO `user` (`username`, `password`, `email`, `first_name`, `last_name`, `city`, `state`, `zip`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);')) {
 		// TODO: handle prepare failure
 	}
-	$stmt->bind_param("ssssssss",
-		$_REQUEST['username'],
-		md5($_REQUEST['password'], true),
-		$_REQUEST['email'],
-		$_REQUEST['first_name'],
-		$_REQUEST['last_name'],
-		$_REQUEST['city'],
-		$_REQUEST['state'],
+
+	$istmt->bind_param("ssssssss",
+		$_REQUEST['username'], // CHAR(16)
+		md5($_REQUEST['password'], true), // BINARY(16)
+		$_REQUEST['email'], // VARCHAR(255)
+		$_REQUEST['first_name'], // VARCHAR(255)
+		$_REQUEST['last_name'], // VARCHAR(255)
+		$_REQUEST['city'], // VARCHAR(255)
+		$_REQUEST['state'], // CHAR(2)
 		$_REQUEST['zip'], // CHAR(10)
 	);
-	$stmt->bind_param("s", $_REQUEST['password']);
-	$stmt->bind_param("s", $_REQUEST['username']);
-	$stmt->bind_param("s", $_REQUEST['username']);
-	$stmt->bind_param("s", $_REQUEST['username']);
+
+	$istmt->execute();
+
+	$errno = $istmt->errno;
+	// Error: 1169 SQLSTATE: 23000 (ER_DUP_UNIQUE)
+	// Message: Can't write, because of unique constraint, to table '%s'
+	// http://dev.mysql.com/doc/refman/5.5/en/error-messages-server.html#error_er_dup_unique
+	if ( $errno === 0 ) {
+		$success = true;
+	} else if ( $errno === 1169 ) {
+		// check which unique constraint got hit
+		if(!($db->prepare('SELECT COUNT(`username`) AS `uhits` FROM `user` WHERE `username` = ? UNION ALL SELECT COUNT(`email`) AS `uhits` FROM `user` WHERE `email` = ?')) {
+			// TODO: handle prepare failure
+		}
+		
+		$_SESSION['server_status'] = "Sorry, that User Name was already taken.";
+		$_SESSION['server_status'] = "Sorry, that Email was already used.";
+	} else {
+		$_SESSION['server_status'] = "Encountered error during SQL transaction: $istmt->error";
+	}
 
 
 }
 
+$end_processing = microtime(true);
+$processing_time = $end_processing - $start_processing;
 $_SESSION['processing_time'] = $processing_time;
-
-$success = false;
 
 
 $path = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
