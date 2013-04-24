@@ -17,11 +17,11 @@ foreach ( array(
 		function() { return Validator::getValidator("City", "city" ); },
 		function() { return Validator::getValidator("State", "state" ); },
 		function() { return Validator::getValidator("Zip", "zip" ); },
-		/*function() { return Validator::getValidator("SmartyStreet", "smartystreet", array(
+		function() { return Validator::getValidator("SmartyStreet", "smartystreet", array(
 				'city' => isset($_REQUEST['city']) ? $_REQUEST['city'] : '',
 				'state' => isset($_REQUEST['state']) ? $_REQUEST['state'] : '',
 				'zipcode' => isset($_REQUEST['zip']) ? $_REQUEST['zip'] : '',
-			) ); },*/
+			) ); },
 		) as $field => $validator ) {
 	$validation = $validator();
 	if ( is_string( $validation ) )
@@ -29,6 +29,7 @@ foreach ( array(
 	if ( $validation->valid() !== true )
 		$valid = false;
 }
+
 $success = false;
 
 if ( $valid ) {
