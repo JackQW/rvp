@@ -118,9 +118,9 @@ $ssl = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 's' : '';
 $host = $_SERVER['HTTP_HOST'];
 $path = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
 if ( $success === true ) {
-	header("Location: http$ssl://$host/$path/thankyou.php", true, 302);
+	header("Location: http$ssl://$host$path/thankyou.php", true, 302);
 } else {
-	header("Location: http$ssl://$host/$path/registration.php", true, 307);	
+	header("Location: http$ssl://$host$path/registration.php", true, 307);	
 }
 die();
 
