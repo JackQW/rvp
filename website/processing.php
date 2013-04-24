@@ -13,27 +13,26 @@ require_once("include/validator.include.php");
 
 $valid = true;
 foreach ( array(
-		Validator::getValidator("UserName", "username" ),
-		Validator::getValidator("Password", "password" ),
-		Validator::getValidator("FirstName", "lastname" ),
-		Validator::getValidator("LastName", "lastname" ),
-		Validator::getValidator("City", "city" ),
-		Validator::getValidator("State", "state" ),
-		Validator::getValidator("Zip", "zip" ),
-		Validator::getValidator("SmartyStreet", "smartystreet", array(
+		function() { return Validator::getValidator("UserName", "username" ); },
+		function() { return Validator::getValidator("Password", "password" ); },
+		function() { return Validator::getValidator("FirstName", "lastname" ); },
+		function() { return Validator::getValidator("LastName", "lastname" ); },
+		function() { return Validator::getValidator("City", "city" ); },
+		function() { return Validator::getValidator("State", "state" ); },
+		function() { return Validator::getValidator("Zip", "zip" ); },
+		function() { return Validator::getValidator("SmartyStreet", "smartystreet", array(
 				'city' => isset($_REQUEST['city']) ? $_REQUEST['city'] : '',
 				'state' => isset($_REQUEST['state']) ? $_REQUEST['state'] : '',
 				'zipcode' => isset($_REQUEST['zip']) ? $_REQUEST['zip'] : '',
-			) ),
+			) ); },
 		) as $field => $validator ) {
-	if ( !is_object( $validator ) )
-		die( "$field: ". serialize($validator) );
-	if ( $validator->valid() !== true )
+	$validation = $validator();
+	print( "$field: ". serialize($validation) ."\n");
+	if ( $validation->valid() !== true )
 		$valid = false;
 }
-
-
-$_SESSION['server_status'] = true;
+die();
+$_SESSION['server_status'] = '';
 $success = false;
 
 if ( $valid ) {
@@ -119,12 +118,13 @@ $end_processing = microtime(true);
 $processing_time = $end_processing - $start_processing;
 $_SESSION['processing_time'] = $processing_time;
 
-
+$ssl = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 's' : '';
+$host = $_SERVER['HTTP_HOST'];
 $path = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
 if ( $success === true ) {
 	header("Location: /$path/thankyou.php", true, 303);
 } else {
-	header("Location: /$path/registration.php", true, 303);	
+	header("Location: http$ssl://$host/$path/registration.php", true, 303);	
 }
 die();
 

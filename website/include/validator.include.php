@@ -50,8 +50,9 @@ class Validator {
 	 * Instances a registered validator.
 	 * Can easily be extended for class auto-loading.
 	 *
+	 * @param string $type The field type to be validated.
 	 * @param string $field A field name to use for feedback.
-	 * @param mixed $val A value to be validated.
+	 * @param mixed $val (optional) A value to be validated.
 	 */
 	static function getValidator( $type, $field, $val = null ) {
 		$class = array_search( $type, self::$validatorClasses, true );
@@ -73,15 +74,15 @@ class Validator {
 	 * @param mixed $val A value to be validated.
 	 */
 	protected function __constructor( $field, $val = null ) {
-		if ( !is_string($fieldName) || $fieldName === '' )
+		if ( !is_string($field) || $field === '' )
 			return; // possibly a special validator
-		$fieldName = $field;
+		$this->fieldName = $field;
 		if ( $val === null )
-			if ( isset( $_REQUEST[$fieldName] ) && !empty($_REQUEST[$fieldName]) )
-				$value = $_REQUEST[$fieldName];
-		$value = $val;
-		if ( $value !== null )
-			validateValue();
+			if ( isset( $_REQUEST[$this->fieldName] ) && !empty($_REQUEST[$this->fieldName]) )
+				$this->value = $_REQUEST[$this->fieldName];
+		$this->value = $val;
+		if ( $this->value !== null )
+			$this->validateValue();
 	}
 	
 	/**
@@ -101,13 +102,14 @@ class Validator {
 	 * @return true|string The value associated with the validator.
 	 */
 	public function validateValue() {
-		$result = validate( $value );
-		if ( $fieldName !== '' && $result === true ) {
-			$_SESSION[ "vfb_$fieldName" ] = $result;
+		$this->result = self::validate( $this->value );
+		$vfbfn = "vfb_$this->fieldName";
+		if ( $this->fieldName !== '' && $this->result === true ) {
+			$_SESSION[ $vfbfn ] = $this->result;
 		} else {
-			unset( $_SESSION[ "vfb_$fieldName" ] );
+			unset( $_SESSION[ $vfbfn ] );
 		}
-		return $result;
+		return $this->result;
 	}
 
 	/**
@@ -119,7 +121,9 @@ class Validator {
 	 * @return null|true|string The result of the last validation, or null.
 	 */
 	public function valid() {
-		return $result;
+		if ( !isset($this->result) )
+			return $this->validateValue();
+		return $this->result;
 	}
 }
 

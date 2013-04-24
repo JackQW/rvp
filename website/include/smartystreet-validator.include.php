@@ -41,7 +41,7 @@ class SmartyStreetValidator extends Validator {
 	 */
 	public function __constructor($field, $params = null) {
 		if ( is_array( $params ) )
-			maybe_add_auth_params( $params );
+			self::maybe_add_auth_params( $params );
 		else throw new Exception('Syntax error; $params is not an array.');
 		parent::__constructor($field, $params);
 	}
@@ -73,7 +73,7 @@ class SmartyStreetValidator extends Validator {
 	 */
 	public static function validate( $params ) {
 		if ( is_array( $params ) )
-			maybe_add_auth_params( $params );
+			self::maybe_add_auth_params( $params );
 
 		// account for info
 		if ( !isset($params['city']) || empty($params['city']) )

@@ -34,7 +34,7 @@ class LastNameValidator extends NameValidator {
 	 * @return true|string True if the value was valid, or an error message if not.
 	 */
 	public static function validate( $arg ) {
-		return validate_name( $arg, 'Last name' );
+		return self::validate_name( $arg, 'Last name' );
 	}
 }
 

@@ -1,5 +1,6 @@
 <?
 require_once('validator.include.php');
+require_once('us-states.include.php');
 
 /**
  * Validates a state.

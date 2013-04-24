@@ -29,7 +29,7 @@ function display_feedback( $field, $format = null ) {
 		if ( is_string($format) && !empty($format) ) {
 			?><span data-debug="<?= $field; ?>"><? printf( $format, $_SESSION[$field] ); ?></span><?
 		} else {
-			?><span><?= $_SESSION[$field]; ?></span><?
+			?><span data-debug="<?= $field; ?>"><?= $_SESSION[$field]; ?></span><?
 		}
 	}
 }
@@ -50,6 +50,7 @@ function display_feedback( $field, $format = null ) {
 				// http://wiki.whatwg.org/wiki/Autocomplete_Types
 				?>
 				<div id="processing-feedback">
+					<? print_r( $_SESSION ); ?>
 					<? display_feedback( 'server_status' ); ?>
 					<? display_feedback( 'vfb_server' ); ?>
 					<? display_feedback( 'vfb_firstname' ); ?>
@@ -60,7 +61,7 @@ function display_feedback( $field, $format = null ) {
 					<? display_feedback( 'vfb_email' ); ?>
 					<? display_feedback( 'vfb_username' ); ?>
 					<? display_feedback( 'vfb_smartystreet' ); ?>
-					<? display_feedback( 'processing_time', 'It took %.3f seconds to process the information.' ); ?>
+					<? display_feedback( 'processing_time', 'It took %.3f seconds to process your previous attempt.' ); ?>
 				</div>
 				<input type="text" name="firstname" autocomplete="given-name" placeholder="First Name" required="true" autofocus="true" <? request_input_value("firstname"); ?> />
 				<input type="text" name="lastname" autocomplete="family-name" placeholder="Last Name" required="true" <? request_input_value("lastname"); ?> />
