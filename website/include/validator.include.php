@@ -36,6 +36,13 @@ class Validator {
 
 
 	/**
+	 * The validation result.
+	 *
+	 * @see validateValue()
+	 */
+	protected $result = null;
+
+	/**
 	 * Instances a registered validator.
 	 * Can easily be extended for class auto-loading.
 	 *
@@ -81,7 +88,7 @@ class Validator {
 
 	/**
 	 * Validates the stored value.
-	 * Stores feedback in $_SESSION[ 'vfb_$fieldName' ]
+	 * Stores feedback in $_SESSION[ 'vfb_$fieldName' ] as well.
 	 *
 	 * @return true|string The value associated with the validator.
 	 */
@@ -92,6 +99,18 @@ class Validator {
 		} else {
 			unset( $_SESSION[ "vfb_$fieldName" ] );
 		}
+		return $result;
+	}
+
+	/**
+	 * Returns the result of the last validation, or null.
+	 * If true, validation succeeded.
+	 * If null, no validation performed.
+	 * If a string, validation reports an error.
+	 *
+	 * @return null|true|string The result of the last validation, or null.
+	 */
+	public function valid() {
 		return $result;
 	}
 }

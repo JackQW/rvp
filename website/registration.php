@@ -24,9 +24,9 @@ function request_input_value( $field ) {
  * @internal Helper function for repetative bits.
  * @param string $field
  */
-function display_validator_feedback( $field ) {
-	if ( isset($_SESSION["vfb_$field"]) && !empty($_SESSION["vfb_$field"]) ) {
-		?><span><?= $_SESSION["vfb_$field"]; ?></span><?
+function display_feedback( $field ) {
+	if ( isset($_SESSION[$field]) && !empty($_SESSION[$field]) ) {
+		?><span><?= $_SESSION[$field]; ?></span><?
 	}
 }
 
@@ -45,15 +45,17 @@ function display_validator_feedback( $field ) {
 				// https://developer.mozilla.org/en-US/docs/HTML/Forms_in_HTML
 				// http://wiki.whatwg.org/wiki/Autocomplete_Types
 				?>
-				<div class="vfb">
-					<? display_validator_feedback( "firstname" ); ?>
-					<? display_validator_feedback( "lastname" ); ?>
-					<? display_validator_feedback( "city" ); ?>
-					<? display_validator_feedback( "state" ); ?>
-					<? display_validator_feedback( "zip" ); ?>
-					<? display_validator_feedback( "email" ); ?>
-					<? display_validator_feedback( "username" ); ?>
-					<? display_validator_feedback( "smartystreet" ); ?>
+				<div id="processing-feedback">
+					<? display_feedback( "server_status" ); ?>
+					<? display_feedback( "vfb_server" ); ?>
+					<? display_feedback( "vfb_firstname" ); ?>
+					<? display_feedback( "vfb_lastname" ); ?>
+					<? display_feedback( "vfb_city" ); ?>
+					<? display_feedback( "vfb_state" ); ?>
+					<? display_feedback( "vfb_zip" ); ?>
+					<? display_feedback( "vfb_email" ); ?>
+					<? display_feedback( "vfb_username" ); ?>
+					<? display_feedback( "vfb_smartystreet" ); ?>
 				</div>
 				<input type="text" name="firstname" autocomplete="given-name" placeholder="First Name" required="true" autofocus="true" <? request_input_value("firstname"); ?> />
 				<input type="text" name="lastname" autocomplete="family-name" placeholder="Last Name" required="true" <? request_input_value("lastname"); ?> />
