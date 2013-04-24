@@ -15,16 +15,16 @@ $valid = true;
 foreach ( array(
 		function() { return Validator::getValidator("UserName", "username" ); },
 		function() { return Validator::getValidator("Password", "password" ); },
-		function() { return Validator::getValidator("FirstName", "lastname" ); },
+		function() { return Validator::getValidator("FirstName", "firstname" ); },
 		function() { return Validator::getValidator("LastName", "lastname" ); },
 		function() { return Validator::getValidator("City", "city" ); },
 		function() { return Validator::getValidator("State", "state" ); },
 		function() { return Validator::getValidator("Zip", "zip" ); },
-		function() { return Validator::getValidator("SmartyStreet", "smartystreet", array(
+		/*function() { return Validator::getValidator("SmartyStreet", "smartystreet", array(
 				'city' => isset($_REQUEST['city']) ? $_REQUEST['city'] : '',
 				'state' => isset($_REQUEST['state']) ? $_REQUEST['state'] : '',
 				'zipcode' => isset($_REQUEST['zip']) ? $_REQUEST['zip'] : '',
-			) ); },
+			) ); },*/
 		) as $field => $validator ) {
 	$validation = $validator();
 	if ( is_string( $validation ) )
@@ -54,8 +54,8 @@ if ( $valid ) {
 				$_REQUEST['username'], // CHAR(16)
 				md5(PASSWORD_HASH_SALT.$_REQUEST['password'], true), // BINARY(16)
 				$_REQUEST['email'], // VARCHAR(255)
-				$_REQUEST['first_name'], // VARCHAR(255)
-				$_REQUEST['last_name'], // VARCHAR(255)
+				$_REQUEST['firstname'], // VARCHAR(255)
+				$_REQUEST['lastname'], // VARCHAR(255)
 				$_REQUEST['city'], // VARCHAR(255)
 				$_REQUEST['state'], // CHAR(2)
 				$_REQUEST['zip'] // CHAR(10)
@@ -64,37 +64,49 @@ if ( $valid ) {
 			$istmt->execute();
 
 			$errno = $istmt->errno;
-
-			// Error: 1169 SQLSTATE: 23000 (ER_DUP_UNIQUE)
-			// Message: Can't write, because of unique constraint, to table '%s'
-			// http://dev.mysql.com/doc/refman/5.5/en/error-messages-server.html#error_er_dup_unique
 			if ( $errno === 0 ) {
 				$success = true; // woo hoo.
-			} else if ( $errno === 1169 ) { // check which unique constraint got hit
+			} else if ( $errno === 1062 ) { // check which unique constraint got hit
+				// Error: 1062 SQLSTATE: 23000 (ER_DUP_ENTRY)
+				// Message: Duplicate entry '%s' for key %d
+				// http://dev.mysql.com/doc/refman/5.5/en/error-messages-server.html#error_er_dup_unique
 				// the unique constraint check statement
-				$cstmt = null;
-				if($cstmt = $db->prepare('SELECT COUNT(`username`) AS `uhits` FROM `user` WHERE `username` = ? UNION ALL SELECT COUNT(`email`) AS `uhits` FROM `user` WHERE `email` = ?')) {
-					$cstmt->bind_param('ss',
-						$_REQUEST['username'],
-						$_REQUEST['email'] );
+				$matches = null;
+				if (!preg_match("/^Duplicate entry '.*?' for key '(.*?)_UNIQUE'$/", $istmt->error, $matches)) {
+					/* Fallback code:
+					$cstmt = null;
+					if($cstmt = $db->prepare('SELECT COUNT(`username`) AS `uhits` FROM `user` WHERE `username` = ? UNION ALL SELECT COUNT(`email`) AS `uhits` FROM `user` WHERE `email` = ?')) {
+						$cstmt->bind_param('ss',
+							$_REQUEST['username'],
+							$_REQUEST['email'] );
 
-					$cstmt->bind_result($cresult);
-					$stmt->fetch();
-					$username_hits = $cresult;
-					$stmt->fetch();
-					$email_hits = $cresult;
-					if ( $username_hits > 0 ) {
-						$_SESSION['server_status'] = "Sorry, that User Name was already taken.";
-					} else if ( $email_hits > 0 ) {
-						$_SESSION['server_status'] = "Sorry, that Email was already used.";
+						$cstmt->bind_result($cresult);
+						$stmt->fetch();
+						$username_hits = $cresult;
+						$stmt->fetch();
+						$email_hits = $cresult;
+						if ( $username_hits > 0 ) {
+							$_SESSION['server_status'] = "Sorry, that User Name was already taken.";
+						} else if ( $email_hits > 0 ) {
+							$_SESSION['server_status'] = "Sorry, that Email was already used.";
+						} else {
+							$_SESSION['server_status'] = "Sorry, an unhandled unique constraint collision occurred.";
+						}
 					} else {
-						$_SESSION['server_status'] = "Sorry, an unhandled unique constraint collision occurred.";
+						if ( isset($cstmt) ) {
+							$_SESSION['server_status'] = "An error occurred while trying to prepare the unique constraint check statement:\n\t$cstmt->error";
+						} else {
+							$_SESSION['server_status'] = "Unable to instance a prepared SQL statement. Please report this error.";
+						}
 					}
+					*/
+					$_SESSION['server_status'] = "Encountered error during SQL transaction:\n\t$istmt->error";
 				} else {
-					if ( isset($cstmt) ) {
-						$_SESSION['server_status'] = "An error occurred while trying to prepare the unique constraint check statement:\n\t$cstmt->error";
-					} else {
-						$_SESSION['server_status'] = "Unable to instance a prepared SQL statement. Please report this error.";
+					$uniquehit = $matches[1];
+					if ( $uniquehit === 'username' ) {
+						$_SESSION['server_status'] = "Sorry, that User Name was already taken.";
+					} else if ( $uniquehit === 'email' ) {
+						$_SESSION['server_status'] = "Sorry, that Email was already used.";
 					}
 				}
 			} else {
