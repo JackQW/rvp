@@ -82,37 +82,44 @@ class SmartyStreetValidator extends Validator {
 		print_r( $params );
 
 		// account for params
-		echo "smartystreet accounting for city x\n";
-		if ( !isset($params['city']) || empty($params['city']) )
-			return 'You must specify a city.';
-		echo "smartystreet accounting for state x\n";
-		if ( !isset($params['state']) || empty($params['state']) )
-			return 'You must specify a state.';
-		echo "smartystreet accounting for zipcode x\n";
-		if ( !isset($params['zipcode']) || empty($params['zipcode']) )
-			return 'You must specify a zip code.';
 		echo "smartystreet accounting for id x\n";
 		if ( !isset($params['auth-id']) || empty($params['auth-id']) )
 			return 'The SmartyStreets Auth ID isn\'t specified.';
+
 		echo "smartystreet accounting for token x\n";
 		if ( !isset($params['auth-token']) || empty($params['auth-token']) )
 			return 'The SmartyStreets Auth Token isn\'t specified.';
+
+		echo "smartystreet accounting for city x\n";
+		if ( !isset($params['city']) || empty($params['city']) )
+			return 'You must specify a city.';
+
+		echo "smartystreet accounting for state x\n";
+		if ( !isset($params['state']) || empty($params['state']) )
+			return 'You must specify a state.';
+
+		echo "smartystreet accounting for zipcode x\n";
+		if ( !isset($params['zipcode']) || empty($params['zipcode']) )
+			return 'You must specify a zip code.';
 
 		echo "smartystreet preparing request x\n";
 
 		// remove any additional info in the array
 		$params = array_intersect_key( $params, array(
+				'auth-id' => 1,
+				'auth-token' => 1,
 				'city' => 1,
 				'state' => 1,
 				'zipcode' => 1,
-				'auth-id' => 1,
-				'auth-token' => 1,
 			));
 
 		// encode for posting to smartystreets
 		$post_input = json_encode( $params );
+		//$query = http_build_query($params);
+		// "https://api.smartystreets.com/zipcode?$query"
 
-		/* Curl doesn't seem to be working for me; php_curl.dll just fails to load. */
+		/* Curl doesn't seem to be working for me; php_curl.dll just fails to load.
+
 		$c = curl_init('https://api.smartystreets.com/zipcode');
 		curl_setopt_array( $c, array(
 				CURLOPT_RETURNTRANSFER => true,
@@ -126,7 +133,10 @@ class SmartyStreetValidator extends Validator {
 		$result_json = curl_exec($c);
 		//*/
 
-		/* PECL route:
+		/* PECL route (can't find extension):
+
+		$post_input = json_encode( $params );
+
 		// referenced code:
 		// https://github.com/smartystreets/LiveAddressSamples/blob/master/php/post_optimized_pecl.php
 
@@ -139,6 +149,23 @@ class SmartyStreetValidator extends Validator {
 		$resp = $req->send();
 		$result_json = $resp->getBody();
 		*/
+
+		/* F*ck can't get Curl or PECL to work! And THIS requires openssl support built into php!
+
+		// http://www.php.net/manual/en/context.http.php
+		$ctx = stream_context_create( array (
+				'http' => array (
+					'method' => 'POST',
+					'header' => 'Content-Type: application/json\r\n',
+					'content' => $post_input,
+				),
+			) );
+
+		$result_json = file_get_contents( "https://api.smartystreets.com/zipcode", false, $ctx );
+
+		*/
+		die("ffs!");
+
 
 		echo "smartystreet performed request x\n";
 
