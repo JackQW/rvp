@@ -9,24 +9,25 @@ require_once("include/config.php");
 require_once("include/validator.php");
 
 $valid = true;
+// could use lambdas to lazy instance validators; helpful to reduce spam during debug
+// see SVN history for that variation, removed to reduce clutter
 foreach ( array(
-		function() { return Validator::getValidator("UserName", "username" ); },
-		function() { return Validator::getValidator("Password", "password" ); },
-		function() { return Validator::getValidator("FirstName", "firstname" ); },
-		function() { return Validator::getValidator("LastName", "lastname" ); },
-		function() { return Validator::getValidator("City", "city" ); },
-		function() { return Validator::getValidator("State", "state" ); },
-		function() { return Validator::getValidator("Zip", "zip" ); },
-		function() { return Validator::getValidator("SmartyStreet", "smartystreet", array(
+		Validator::getValidator("UserName", "username" ),
+		Validator::getValidator("Password", "password" ),
+		Validator::getValidator("FirstName", "firstname" ),
+		Validator::getValidator("LastName", "lastname" ),
+		Validator::getValidator("City", "city" ),
+		Validator::getValidator("State", "state" ),
+		Validator::getValidator("Zip", "zip" ),
+		Validator::getValidator("SmartyStreet", "smartystreet", array(
 				'city' => isset($_REQUEST['city']) ? $_REQUEST['city'] : '',
 				'state' => isset($_REQUEST['state']) ? $_REQUEST['state'] : '',
 				'zipcode' => isset($_REQUEST['zip']) ? $_REQUEST['zip'] : '',
-			) ); },
-		) as $field => $validator ) {
-	$validation = $validator();
-	if ( is_string( $validation ) )
-		$_SESSION['server_status'] = $validation;
-	if ( $validation->valid() !== true )
+			) ),
+		) as $validator ) {
+	if ( is_string( $validator ) ) // error message
+		$_SESSION['server_status'] = $validator;
+	if ( $validator->valid() !== true )
 		$valid = false;
 }
 
