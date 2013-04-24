@@ -16,15 +16,6 @@ class PasswordValidator extends Validator {
 	}
 
 	/**
-	 * Constructor for Validator derived class.
-	 *
-	 * @see Validator::__construct($field, $value)
-	 */
-	public function __construct( $field, $val = null ) {
-		parent::__construct($field, $val);
-	}
-
-	/**
 	 * Validates a password. Allows all characters.
 	 *
 	 * @example Derp de derp!1

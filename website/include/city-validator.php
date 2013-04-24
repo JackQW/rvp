@@ -16,15 +16,6 @@ class CityValidator extends Validator {
 	protected static function __init() {
 		return "City";
 	}
-
-	/**
-	 * Constructor for Validator derived class.
-	 *
-	 * @see Validator::__construct($field, $value)
-	 */
-	public function __construct( $field, $val = null ) {
-		parent::__construct($field, $val);
-	}
 	
 	/**
 	 * Validates a city. Allows letters and spaces.

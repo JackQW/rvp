@@ -18,15 +18,6 @@ class LastNameValidator extends NameValidator {
 	}
 
 	/**
-	 * Constructor for Validator derived class.
-	 *
-	 * @see Validator::__construct($field, $value)
-	 */
-	public function __construct( $field, $val = null ) {
-		parent::__construct($field, $val);
-	}
-	
-	/**
 	 * Validates a last name. Allows all printable characters.
 	 *
 	 * @example O'Farley VI

@@ -16,15 +16,6 @@ class UserNameValidator extends Validator {
 	}
 
 	/**
-	 * Constructor for Validator derived class.
-	 *
-	 * @see Validator::__construct($field, $value)
-	 */
-	public function __construct( $field, $val = null ) {
-		parent::__construct($field, $val);
-	}
-
-	/**
 	 * Validates a username. Allows up to 16 uppercase, lowercase, number, and underscore characters.
 	 *
 	 * @param string $arg The value to validate.

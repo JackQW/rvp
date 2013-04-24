@@ -19,16 +19,6 @@ class StateValidator extends Validator {
 	}
 
 	/**
-	 * Constructor for Validator derived class.
-	 *
-	 * @see Validator::__construct($field, $value)
-	 */
-	public function __construct( $field, $val = null ) {
-		parent::__construct($field, $val);
-	}
-	
-
-	/**
 	 * Validates a 2-letter ANSI uppercase state code.
 	 * Does not validate the state's formal name.
 	 *

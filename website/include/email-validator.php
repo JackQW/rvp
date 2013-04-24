@@ -16,15 +16,6 @@ class EmailValidator extends Validator {
 	protected static function __init() {
 		return "Email";
 	}
-
-	/**
-	 * Constructor for Validator derived class.
-	 *
-	 * @see Validator::__construct($field, $value)
-	 */
-	public function __construct( $field, $val = null ) {
-		parent::__construct($field, $val);
-	}
 	
 	/**
 	 * Validates an email address based on RFC 5321.

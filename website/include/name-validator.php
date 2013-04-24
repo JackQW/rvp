@@ -16,15 +16,6 @@ class NameValidator extends Validator {
 	protected static function __init() {
 		return "Name";
 	}
-
-	/**
-	 * Constructor for Validator derived class.
-	 *
-	 * @see Validator::__construct($field, $value)
-	 */
-	public function __construct( $field, $val = null ) {
-		parent::__construct($field, $val);
-	}
 	
 	/**
 	 * Validates a typed name. Allows all printable characters.
