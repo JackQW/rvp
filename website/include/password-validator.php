@@ -23,7 +23,7 @@ class PasswordValidator extends Validator {
 	 * @return true|string True if the value was valid, or an error message if not.
 	 */
 	public static function validate( $arg ) {
-		return ( $arg !== '' && preg_match('/^(?=[[:digit:]])(?=[[:upper:]])(?=[[:lower:]])(?=[[:punct:]]).{7,}$/', $arg) ) ? true :
+		return ( $arg !== '' && preg_match('/^(?=.*?[[:digit:]])(?=.*?[[:upper:]])(?=.*?[[:lower:]])(?=.*?[[:punct:]]).{7,}$/', $arg) ) ? true :
 			"Your password does not meet the security requirements.\n".
 			"Please use at least 1 character of each:\n".
 			"\ta number,\n\ta punctuation mark or symbol,\n\tan uppercase letter,\n\tand lowercase letter.\n".
