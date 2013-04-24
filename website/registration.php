@@ -51,8 +51,7 @@ function display_feedback( $field, $format = null ) {
 				// https://developer.mozilla.org/en-US/docs/HTML/Forms_in_HTML
 				// http://wiki.whatwg.org/wiki/Autocomplete_Types
 				?>
-				<div id="processing-feedback">
-					<?
+				<div id="processing-feedback"><?
 					//print_r( $_SESSION );
 					display_feedback( 'server_status' );
 					display_feedback( 'vfb_firstname' );
@@ -68,8 +67,7 @@ function display_feedback( $field, $format = null ) {
 						?><span>You've already registered with us!<br/>Feel free to register again though.</span><?
 					}
 					//display_feedback( 'processing_time', 'It took %.3f seconds to process your previous attempt.' );
-					?>
-				</div>
+					?></div>
 				<label>First Name: <input type="text" name="firstname" autocomplete="given-name" placeholder="First Name" required="true" autofocus="true" <? request_input_value("firstname"); ?> /></label>
 				<label>Last Name: <input type="text" name="lastname" autocomplete="family-name" placeholder="Last Name" required="true" <? request_input_value("lastname"); ?> /></label>
 				<label>City: <input type="text" name="city" autocomplete="locality" placeholder="City" required="true" <? request_input_value("city"); ?> /></label>
