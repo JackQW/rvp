@@ -25,7 +25,8 @@ class PasswordValidator extends Validator {
 	public static function validate( $arg ) {
 		return ( $arg !== '' && preg_match('/^(?=[[:digit:]])(?=[[:upper:]])(?=[[:lower:]])(?=[[:punct:]]).{7,}$/', $arg) ) ? true :
 			"Your password does not meet the security requirements.\n".
-			"Please use at least 1 digit, 1 uppercase, 1 lowercase, and 1 punctuation characters.\n".
+			"Please use at least 1 character of each:\n".
+			"\ta number,\n\ta punctuation mark or symbol,\n\tan uppercase letter,\n\tand lowercase letter.\n".
 			"Your password must be at least 7 total characters in length.";
 	}
 }

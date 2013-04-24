@@ -73,7 +73,7 @@ function display_feedback( $field, $format = null ) {
 				<label>First Name: <input type="text" name="firstname" autocomplete="given-name" placeholder="First Name" required="true" autofocus="true" <? request_input_value("firstname"); ?> /></label>
 				<label>Last Name: <input type="text" name="lastname" autocomplete="family-name" placeholder="Last Name" required="true" <? request_input_value("lastname"); ?> /></label>
 				<label>City: <input type="text" name="city" autocomplete="locality" placeholder="City" required="true" <? request_input_value("city"); ?> /></label>
-				<label>State: <select name="state" autocomplete="state" required="true">
+				<label>State: <select name="state" autocomplete="region" required="true">
 					<option></option><? // hardcode blank option
 
 					$states = US_States::getStates();

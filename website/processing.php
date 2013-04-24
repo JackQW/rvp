@@ -60,6 +60,7 @@ if ( $valid ) {
 				$_REQUEST['zip'] // CHAR(10)
 			);
 
+			// don't care if succeeded, relying on errno being set
 			$istmt->execute();
 
 			$errno = $istmt->errno;
@@ -80,48 +81,23 @@ if ( $valid ) {
 				// the unique constraint check statement
 				$matches = null;
 				if (!preg_match("/^Duplicate entry '.*?' for key '(.*?)_UNIQUE'$/", $istmt->error, $matches)) {
-					/* Fallback code:
-					$cstmt = null;
-					if($cstmt = $db->prepare('SELECT COUNT(`username`) AS `uhits` FROM `user` WHERE `username` = ? UNION ALL SELECT COUNT(`email`) AS `uhits` FROM `user` WHERE `email` = ?')) {
-						$cstmt->bind_param('ss',
-							$_REQUEST['username'],
-							$_REQUEST['email'] );
-
-						$cstmt->bind_result($cresult);
-						$stmt->fetch();
-						$username_hits = $cresult;
-						$stmt->fetch();
-						$email_hits = $cresult;
-						if ( $username_hits > 0 ) {
-							$_SESSION['server_status'] = "Sorry, that User Name was already taken.";
-						} else if ( $email_hits > 0 ) {
-							$_SESSION['server_status'] = "Sorry, that Email was already used.";
-						} else {
-							$_SESSION['server_status'] = "Sorry, an unhandled unique constraint collision occurred.";
-						}
-					} else {
-						if ( isset($cstmt) ) {
-							$_SESSION['server_status'] = "An error occurred while trying to prepare the unique constraint check statement:\n\t$cstmt->error";
-						} else {
-							$_SESSION['server_status'] = "Unable to instance a prepared SQL statement. Please report this error.";
-						}
-					}
-					*/
-					$_SESSION['server_status'] = "Encountered error during SQL transaction:\n\t$istmt->error";
+					// The error message could change, but it seems pretty fixed
+					// Fallback code is documented in subversion history
+					$_SESSION['server_status'] = "Encountered error during SQL transaction:\n\t$istmt->error\n\tPlease report this error.";
 				} else {
 					$uniquehit = $matches[1];
 					if ( $uniquehit === 'username' ) {
 						$_SESSION['server_status'] = "Sorry, that User Name was already taken.";
 					} else if ( $uniquehit === 'email' ) {
 						$_SESSION['server_status'] = "Sorry, that Email was already used.";
-					} else { // standard wtfever case
+					} else {
+						// standard 'wtfhow? wtfever' case, probs will never hit
 						$_SESSION['server_status'] = "Sorry, that $uniquehit was already used.";
 					}
 				}
 			} else {
-				$_SESSION['server_status'] = "Encountered error during SQL transaction:\n\t$istmt->error";
+				$_SESSION['server_status'] = "Encountered error during SQL transaction:\n\t$istmt->error\n\tPlease report this error.";
 			}
-
 		} else {
 			if ( isset($istmt) ) {
 				$_SESSION['server_status'] = "An error occurred while trying to prepare the insert statement:\n\t$istmt->error\n\tPlease report this error.";
