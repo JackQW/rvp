@@ -7,6 +7,19 @@
 class Validator {
 
 	/**
+	 * Registers the class in the validator factory.
+	 * Uses late static binding to call init on referenced subclass.
+	 * Referenced subclass returns field type.
+	 */
+	static function init() {
+		$className = get_called_class();
+		if ( method_exists($className,'init') )
+			$validatorClasses[$className] = static::init();
+	}
+
+	static $validatorClasses = array();
+
+	/**
 	 * The field name suffix in $_SESSION variable to provide feedback to.
 	 * Used as such; $_SESSION[ 'vfb_$fieldName' ]
 	 *
@@ -21,9 +34,16 @@ class Validator {
 	 */
 	protected $value = null;
 
+
+	static function getValidator( $type, $field, $val = null ) {
+		$class = array_search( $validatorClasses, $type, true );
+		if ( $class === false ) return false;
+		return new $class( $field, $val );
+	}
+
 	/**
 	 * Although the Validator class is not abstract, it is not intended
-	 * to be constructed outside of sub-classes.
+	 * to be constructed outside of sub-classes except via factory.
 	 * Default value is fetched from $_REQUEST[$fieldName]
 	 * Feedback from validation is stored in $_SESSION[ 'vfb_$fieldName' ].
 	 *
@@ -74,6 +94,14 @@ class Validator {
  * @see UserNameValidator::validate($arg)
  */
 class UserNameValidator extends Validator {
+	/**
+	 * Registers the class in the validator factory.
+	 * Uses late static binding to returns field type.
+	 * Call by init on parent {@link Validator} class.
+	 */
+	protected static function init() {
+		return "UserName";
+	}
 
 	/**
 	 * Constructor for Validator derived class.
@@ -103,6 +131,14 @@ class UserNameValidator extends Validator {
  * @see PasswordValidator::validate($arg)
  */
 class PasswordValidator extends Validator {
+	/**
+	 * Registers the class in the validator factory.
+	 * Uses late static binding to returns field type.
+	 * Call by init on parent {@link Validator} class.
+	 */
+	protected static function init() {
+		return "Password";
+	}
 
 	/**
 	 * Constructor for Validator derived class.
@@ -134,6 +170,14 @@ class PasswordValidator extends Validator {
  * @see EmailValidator::validate($arg)
  */
 class EmailValidator extends Validator {
+	/**
+	 * Registers the class in the validator factory.
+	 * Uses late static binding to returns field type.
+	 * Call by init on parent {@link Validator} class.
+	 */
+	protected static function init() {
+		return "Email";
+	}
 
 	/**
 	 * Constructor for Validator derived class.
@@ -170,6 +214,14 @@ class EmailValidator extends Validator {
  * @see ZipValidator::validate($arg)
  */
 class ZipValidator extends Validator {
+	/**
+	 * Registers the class in the validator factory.
+	 * Uses late static binding to returns field type.
+	 * Call by init on parent {@link Validator} class.
+	 */
+	protected static function init() {
+		return "Zip";
+	}
 
 	/**
 	 * Constructor for Validator derived class.
@@ -199,6 +251,14 @@ class ZipValidator extends Validator {
  * @see CityValidator::validate($arg)
  */
 class CityValidator extends Validator {
+	/**
+	 * Registers the class in the validator factory.
+	 * Uses late static binding to returns field type.
+	 * Call by init on parent {@link Validator} class.
+	 */
+	protected static function init() {
+		return "City";
+	}
 
 	/**
 	 * Constructor for Validator derived class.
@@ -227,6 +287,14 @@ class CityValidator extends Validator {
  * @see NameValidator::validate_name($arg)
  */
 class NameValidator extends Validator {
+	/**
+	 * Registers the class in the validator factory.
+	 * Uses late static binding to returns field type.
+	 * Call by init on parent {@link Validator} class.
+	 */
+	protected static function init() {
+		return "Name";
+	}
 
 	/**
 	 * Constructor for Validator derived class.
@@ -269,6 +337,14 @@ class NameValidator extends Validator {
  * @see LastNameValidator::validate($arg)
  */
 class LastNameValidator extends NameValidator {
+	/**
+	 * Registers the class in the validator factory.
+	 * Uses late static binding to returns field type.
+	 * Call by init on parent {@link Validator} class.
+	 */
+	protected static function init() {
+		return "LastName";
+	}
 
 	/**
 	 * Constructor for Validator derived class.
@@ -296,6 +372,14 @@ class LastNameValidator extends NameValidator {
  * @see FirstNameValidator::validate($arg)
  */
 class FirstNameValidator extends NameValidator {
+	/**
+	 * Registers the class in the validator factory.
+	 * Uses late static binding to returns field type.
+	 * Call by init on parent {@link Validator} class.
+	 */
+	protected static function init() {
+		return "FirstName";
+	}
 
 	/**
 	 * Constructor for Validator derived class.
@@ -324,6 +408,14 @@ class FirstNameValidator extends NameValidator {
  * @see StateValidator::validate($arg)
  */
 class StateValidator extends Validator {
+	/**
+	 * Registers the class in the validator factory.
+	 * Uses late static binding to returns field type.
+	 * Call by init on parent {@link Validator} class.
+	 */
+	protected static function init() {
+		return "State";
+	}
 
 	/**
 	 * Constructor for Validator derived class.
@@ -418,7 +510,7 @@ class StateValidator extends Validator {
 	 * @return true|string True if the value was valid, or an error message if not.
 	 */
 	public static function validate( $arg ) {
-		return ($arg !== '' && strlen($arg) != 2 && in_array( $states, $arg )) ||
+		return ($arg !== '' && strlen($arg) != 2 && in_array( $states, $arg, true )) ||
 			'Sorry, the state you specified is not a valid known state.';
 	}
 }
@@ -427,25 +519,25 @@ class StateValidator extends Validator {
 
 /**
  * Validates a city, state, and zip combination.
- * @see SmartyStreetValidator::validate($arg)
+ * @see SmartyStreetValidator::validate($params)
  */
-class SmartyStreetValidator {
+class SmartyStreetValidator extends Validator {
 	/**
-	 * Auth ID from SmartyStreets API.
-	 *
-	 * @link https://smartystreets.com/account/keys
+	 * Registers the class in the validator factory.
+	 * Uses late static binding to returns field type.
+	 * Call by init on parent {@link Validator} class.
 	 */
-	private $auth_id;
-	/**
-	 * Auth token from SmartyStreets API.
-	 *
-	 * @link https://smartystreets.com/account/keys
-	 */
-	private $auth_token;
+	protected static function init() {
+		return "SmartyStreet";
+	}
 
-	public __constructor($id, $token) {
-		$auth_id = $id;
-		$auth_token = $token;
+	/**
+	 * Constructor for Validator derived class.
+	 *
+	 * @see Validator::__construct($field, $value)
+	 */
+	public __constructor($field, $params = null) {
+		parent::__constructor($field, $params);
 	}
 
 
@@ -464,7 +556,6 @@ class SmartyStreetValidator {
 	/**
 	 * Validates a city, state, and zip code combination.
 	 * This is the static form of the operation of the class.
-	 * See {@link validateValue()} for operation with the instanced class.
 	 *
 	 * @link https://smartystreets.com/account/keys
 	 * @param string id Auth ID from SmartyStreets API.
@@ -474,23 +565,44 @@ class SmartyStreetValidator {
 	 * @param string $zip The zip code to validate.
 	 * @return true|string True if the value was valid, or an error message if not.
 	 */
-	public static validate( $id, $token, $city, $state, $zip ) {
-		$post_input = json_encode( array(
-				'city' => $city,
-				'state' => $state,
-				'zipcode' => $zip,
-				'auth-id' => $id,
-				'auth-token' => $token,
-		) );
+	public static validate( $params ) {
+		// account for info
+		if ( !isset($params['city']) || empty($params['city']) )
+			return 'You must specify a city.';
+		if ( !isset($params['state']) || empty($params['state']) )
+			return 'You must specify a state.';
+		if ( !isset($params['zip']) || empty($params['zip']) )
+			return 'You must specify a zip code.';
+		if ( !isset($params['auth-id']) || empty($params['auth-id']) )
+			return 'The SmartyStreets Auth ID isn\'t specified.';
+		if ( !isset($params['auth-token']) || empty($params['auth-token']) )
+			return 'The SmartyStreets Auth Token isn\'t specified.';
+
+		// remove any additional info in the array
+		$params = array_intersect_key( $params, array(
+				'city' => 1,
+				'state' => 1,
+				'zip' => 1,
+				'auth-id' => 1,
+				'auth-token' => 1,
+			));
+
+		// encode for posting to smartystreets
+		$post_input = json_encode( $params );
+
 		$c = curl_init('https://api.smartystreets.com/zipcode');
 		curl_setopt_array( $c, array(
 				CURLOPT_RETURNTRANSFER => true,
 				CURLOPT_HTTPHEADER => array('Content-type: application/json'),
 				CURLOPT_POSTFIELDS => $post_input
 			) );
+		// perform the post, get the result
 		$result_json = curl_exec($c);
+
 		if ( $result_json === false )
 			return 'Unable to get a result from SmartyStreets at this time.';
+
+		// handle the feedback
 		$results = json_decode( $result_json );
 		if ( count( $results ) === 1 ) {
 			$result = $results[0];
@@ -511,7 +623,7 @@ class SmartyStreetValidator {
 			}
 			return true;
 		}
-		$s = '';
+		//$s = '';
 		// TODO: parse results into specifics to append to error message.
 		/*
 		foreach ( $results as $result ) {
@@ -523,9 +635,9 @@ class SmartyStreetValidator {
 
 }
 
-$ssv = new SmartyStreetValidator(
-	'4f1dc143-5dd3-440d-ab15-977aa759c001',
-	'imFvFTg8mF0Ka0321Ejg5c2yykLzYxVHDrosWsAwG8SNWAXfMx/7sVH9wNhBaybSgWDoq6Q5kAKOhrM7Yh1r+Q==');
+// current smarty street auth tokens
+//	'4f1dc143-5dd3-440d-ab15-977aa759c001',
+//	'imFvFTg8mF0Ka0321Ejg5c2yykLzYxVHDrosWsAwG8SNWAXfMx/7sVH9wNhBaybSgWDoq6Q5kAKOhrM7Yh1r+Q==');
 
 
 ?>
