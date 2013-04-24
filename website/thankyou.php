@@ -3,6 +3,12 @@
 	
 	header("Content-Type: application/xhtml+xml; charset=utf-8");
 	header("Vary: Accept");
+
+	if ( !$_SESSION['registered'] ) {
+		header("HTTP/1.0 404 Not Found");
+		die();
+	}
+
 ?>
 <!DOCTYPE html>
 <?xml-stylesheet href="style.css" ?>
@@ -15,8 +21,8 @@
 		<div class="box thx">
 			<h1>Thank you!</h1>
 			<p>
-				Thank you for registering, <?= $username; ?>!<br/>
-				It took us <?= $time; ?> to process your registration.<br/>
+				Thank you for registering, <?= $_SESSION['username']; ?>!<br/>
+				It took us <?= $_SESSION['processing_time']; ?> to process your registration.<br/>
 				Have a nice day!
 			</p>
 		</div>

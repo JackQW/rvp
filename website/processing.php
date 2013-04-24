@@ -1,6 +1,9 @@
 <?
 	session_start();
 
+// get current time
+$start_processing = microtime(true);
+
 require_once("includes/validator.include.php");
 
 $validation = array(
@@ -17,6 +20,12 @@ $validation = array(
 		) ),
 );
 
+$end_processing = microtime(true);
+$processing_time = $end_processing - $start_processing;
+$_SESSION['processing_time'] = $processing_time;
+
+// TODO: sql registration
+
 $success = false;
 
 
@@ -26,6 +35,7 @@ if ( $success === true ) {
 } else {
 	header("Location: /$path/registration.php", true, 303);	
 }
+die();
 
 
 ?>
