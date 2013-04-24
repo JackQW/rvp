@@ -65,6 +65,7 @@ if ( $valid ) {
 
 			$errno = $istmt->errno;
 			if ( $errno === 0 ) {
+				$_SESSION['registered'] = true;
 				$success = true; // woo hoo.
 			} else if ( $errno === 1062 ) { // check which unique constraint got hit
 				// Error: 1062 SQLSTATE: 23000 (ER_DUP_ENTRY)
@@ -130,10 +131,6 @@ if ( $valid ) {
 $end_processing = microtime(true);
 $processing_time = $end_processing - $start_processing;
 $_SESSION['processing_time'] = $processing_time;
-
-print_r($_SESSION);
-
-die();
 
 $ssl = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 's' : '';
 $host = $_SERVER['HTTP_HOST'];

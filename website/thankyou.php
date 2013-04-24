@@ -4,8 +4,11 @@
 	header("Content-Type: application/xhtml+xml; charset=utf-8");
 	header("Vary: Accept");
 
-	if ( !$_SESSION['registered'] ) {
-		header("HTTP/1.0 404 Not Found");
+	if ( !isset($_SESSION['registered']) || $_SESSION['registered'] !== true ) {
+		$ssl = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 's' : '';
+		$host = $_SERVER['HTTP_HOST'];
+		$path = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+		header("Location: http$ssl://$host/$path/registration.php", true, 307);
 		die();
 	}
 
