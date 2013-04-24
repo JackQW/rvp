@@ -44,28 +44,31 @@ function display_feedback( $field, $format = null ) {
 	</head>
 	<body>
 		<div class="box reg">
-			<form action="processing.php" method="post"><?
+			<form action="processing.php" method="post">
+				<?
 				// Development references:
 				// https://developer.mozilla.org/en-US/docs/HTML/Forms_in_HTML
 				// http://wiki.whatwg.org/wiki/Autocomplete_Types
 				?>
 				<div id="processing-feedback">
-					<? print_r( $_SESSION ); ?>
-					<? display_feedback( 'server_status' ); ?>
-					<? display_feedback( 'vfb_server' ); ?>
-					<? display_feedback( 'vfb_firstname' ); ?>
-					<? display_feedback( 'vfb_lastname' ); ?>
-					<? display_feedback( 'vfb_city' ); ?>
-					<? display_feedback( 'vfb_state' ); ?>
-					<? display_feedback( 'vfb_zip' ); ?>
-					<? display_feedback( 'vfb_email' ); ?>
-					<? display_feedback( 'vfb_username' ); ?>
-					<? display_feedback( 'vfb_smartystreet' ); ?>
-					<? display_feedback( 'processing_time', 'It took %.3f seconds to process your previous attempt.' ); ?>
+					<?
+					//print_r( $_SESSION );
+					display_feedback( 'server_status' );
+					display_feedback( 'vfb_server' );
+					display_feedback( 'vfb_firstname' );
+					display_feedback( 'vfb_lastname' );
+					display_feedback( 'vfb_city' );
+					display_feedback( 'vfb_state' );
+					display_feedback( 'vfb_zip' );
+					display_feedback( 'vfb_email' );
+					display_feedback( 'vfb_username' );
+					display_feedback( 'vfb_smartystreet' );
+					//display_feedback( 'processing_time', 'It took %.3f seconds to process your previous attempt.' );
+					?>
 				</div>
 				<input type="text" name="firstname" autocomplete="given-name" placeholder="First Name" required="true" autofocus="true" <? request_input_value("firstname"); ?> />
 				<input type="text" name="lastname" autocomplete="family-name" placeholder="Last Name" required="true" <? request_input_value("lastname"); ?> />
-				<input type="text" name="city" autocomplete="city" placeholder="City" required="true" <? request_input_value("city"); ?> />
+				<input type="text" name="city" autocomplete="locality" placeholder="City" required="true" <? request_input_value("city"); ?> />
 				<select name="state" autocomplete="state" required="true">
 					<option></option><? // hardcode blank option
 
@@ -86,6 +89,7 @@ function display_feedback( $field, $format = null ) {
 				<input type="text" name="zip" autocomplete="postal-code" placeholder="Zip Code" required="true" <? request_input_value("zip"); ?> />
 				<input type="email" name="email" autocomplete="email" placeholder="Email Address" required="true" <? request_input_value("email"); ?> />
 				<input type="text" name="username" autocomplete="nickname" placeholder="User Name" required="true" <? request_input_value("username"); ?> />
+				<input type="password" name="password" autocomplete="off" placeholder="Password" required="true" <? request_input_value("password"); ?> />
 				<input type="submit" value="Register" />
 			</form>
 		</div>

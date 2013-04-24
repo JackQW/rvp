@@ -53,13 +53,12 @@ class Validator {
 	 * @param string $type The field type to be validated.
 	 * @param string $field A field name to use for feedback.
 	 * @param mixed $val (optional) A value to be validated.
+	 * @return Validator|string A validator instance for the field type, or an error message.
 	 */
 	static function getValidator( $type, $field, $val = null ) {
 		$class = array_search( $type, self::$validatorClasses, true );
 		if ( $class === false ) {
-			echo "'$type' is not a registered validator.\nRegistered validator types:\n";
-			print_r(self::$validatorClasses);
-			die();
+			return "There is no registered validator for $type.";
 		}
 		return new $class( $field, $val );
 	}

@@ -3,9 +3,9 @@ define('MYSQL_HOST', 'localhost');
 define('MYSQL_USER', 'root');
 define('MYSQL_PASS', '');
 define('PASSWORD_HASH_SALT','aXK0)@@4z$*1');
+session_start();
 
-	session_start();
-
+$_SESSION['server_status'] = '';
 // get current time
 $start_processing = microtime(true);
 
@@ -27,12 +27,11 @@ foreach ( array(
 			) ); },
 		) as $field => $validator ) {
 	$validation = $validator();
-	print( "$field: ". serialize($validation) ."\n");
+	if ( is_string( $validation ) )
+		$_SESSION['server_status'] = $validation;
 	if ( $validation->valid() !== true )
 		$valid = false;
 }
-die();
-$_SESSION['server_status'] = '';
 $success = false;
 
 if ( $valid ) {
@@ -118,13 +117,17 @@ $end_processing = microtime(true);
 $processing_time = $end_processing - $start_processing;
 $_SESSION['processing_time'] = $processing_time;
 
+print_r($_SESSION);
+
+die();
+
 $ssl = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 's' : '';
 $host = $_SERVER['HTTP_HOST'];
 $path = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
 if ( $success === true ) {
-	header("Location: /$path/thankyou.php", true, 303);
+	header("Location: http$ssl://$host/$path/thankyou.php", true, 302);
 } else {
-	header("Location: http$ssl://$host/$path/registration.php", true, 303);	
+	header("Location: http$ssl://$host/$path/registration.php", true, 307);	
 }
 die();
 
