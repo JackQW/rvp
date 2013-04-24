@@ -4,15 +4,20 @@
 require_once("includes/validator.include.php");
 
 $validation = array(
-	new UserNameValidator("username"),
-	new EmailValidator("email"),
-	new FirstNameValidator("firstname"),
-	new LastNameValidator("lastname"),
-	new CityValidator("city"),
-	new StateValidator("state"),
-	new ZipValidator("zip"),
+	Validator::getValidator("UserName", "username" ),
+	Validator::getValidator("FirstName", "lastname" ),
+	Validator::getValidator("LastName", "lastname" ),
+	Validator::getValidator("City", "city" ),
+	Validator::getValidator("State", "state" ),
+	Validator::getValidator("Zip", "zip" ),
+	Validator::getValidator("SmartyStreet", "smartystreet", array(
+			'city' => $_REQUEST['city'],
+			'state' => $_REQUEST['state'],
+			'zipcode' => $_REQUEST['zip'],
+		) ),
 );
 
+$success = false;
 
 
 $path = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');

@@ -1,6 +1,8 @@
 <?
 	session_start();
 
+	require_once("includes/us-states.include.php");
+
 	header("Content-Type: application/xhtml+xml; charset=utf-8");
 	header("Vary: Accept");
 
@@ -51,13 +53,14 @@ function display_validator_feedback( $field ) {
 					<? display_validator_feedback( "zip" ); ?>
 					<? display_validator_feedback( "email" ); ?>
 					<? display_validator_feedback( "username" ); ?>
+					<? display_validator_feedback( "smartystreet" ); ?>
 				</div>
 				<input type="text" name="firstname" autocomplete="given-name" placeholder="First Name" required="true" autofocus="true" <? request_input_value("firstname"); ?> />
 				<input type="text" name="lastname" autocomplete="family-name" placeholder="Last Name" required="true" <? request_input_value("lastname"); ?> />
 				<input type="text" name="city" autocomplete="city" placeholder="City" required="true" <? request_input_value("city"); ?> />
 				<select name="state" autocomplete="state" required="true">
 				<?
-					foreach ( $state as StateValidator::getStates() ) {
+					foreach ( $state as US_States::getStates() ) {
 						?><option value="<?= $state; ?>" <?
 							if ( isset($_REQUEST['state']) && $_REQUEST['state'] == $state )
 								?>selected="true"<?

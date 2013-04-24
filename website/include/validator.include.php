@@ -59,7 +59,7 @@ class Validator {
 	 */
 	protected __constructor( $field, $val = null ) {
 		if ( !is_string($fieldName) || $fieldName === '' )
-			throw new Exception('Specify a valid field name!');
+			return; // possibly a special validator
 		$fieldName = $field;
 		if ( $val === null )
 			if ( isset( $_REQUEST[$fieldName] ) && !empty($_REQUEST[$fieldName]) )
