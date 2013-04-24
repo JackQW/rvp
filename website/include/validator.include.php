@@ -60,7 +60,8 @@ class Validator {
 		if ( $class === false ) {
 			return "There is no registered validator for $type.";
 		}
-		return new $class( $field, $val );
+		$validator = new $class( $field, $val );
+		return $validator;
 	}
 
 	/**
@@ -72,16 +73,21 @@ class Validator {
 	 * @param string $field A field name to use for feedback.
 	 * @param mixed $val A value to be validated.
 	 */
-	protected function __constructor( $field, $val = null ) {
+	public function __construct( $field, $val = null ) {
+		if ( get_called_class() === __CLASS__ ) {
+			throw new Exception("Validator being instantiated.");
+		}
 		if ( !is_string($field) || $field === '' )
 			return; // possibly a special validator
 		$this->fieldName = $field;
-		if ( $val === null )
-			if ( isset( $_REQUEST[$this->fieldName] ) && !empty($_REQUEST[$this->fieldName]) )
-				$this->value = $_REQUEST[$this->fieldName];
-		$this->value = $val;
-		if ( $this->value !== null )
+		if ( !isset($val) || empty($val) ) {
+			$this->value = @$_REQUEST[$this->fieldName];
+		} else {
+			$this->value = $val;
+		}
+		if ( isset($this->value) && !empty($this->value) )
 			$this->validateValue();
+		echo "$this->fieldName: $this->value x \n";
 	}
 	
 	/**

@@ -22,7 +22,7 @@ class LastNameValidator extends NameValidator {
 	 *
 	 * @see Validator::__construct($field, $value)
 	 */
-	public function __constructor( $field, $val = null ) {
+	public function __construct( $field, $val = null ) {
 		parent::__construct($field, $val);
 	}
 	

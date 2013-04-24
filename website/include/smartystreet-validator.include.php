@@ -25,12 +25,15 @@ class SmartyStreetValidator extends Validator {
 	 *
 	 * @param array $params
 	 */
-	private static function maybe_add_auth_params( $params ) {
+	private static function maybe_add_auth_params( &$params ) {
+		echo "smartystreet maybe_add_auth_params x\n";
 		if ( !isset( $params['auth-id'] ) && defined('SMARTYSTREET_AUTH_ID') ) {
 			$params['auth-id'] = SMARTYSTREET_AUTH_ID;
+			echo "smartystreet auth-id x\n", $params['auth-id'];
 		}
 		if ( !isset( $params['auth-token'] ) && defined('SMARTYSTREET_AUTH_TOKEN') ) {
 			$params['auth-token'] = SMARTYSTREET_AUTH_TOKEN;
+			echo "smartystreet auth-token x\n", $params['auth-token'];
 		}
 	}
 
@@ -39,11 +42,11 @@ class SmartyStreetValidator extends Validator {
 	 *
 	 * @see Validator::__construct($field, $value)
 	 */
-	public function __constructor($field, $params = null) {
+	public function __construct($field, $params = null) {
 		if ( is_array( $params ) )
 			self::maybe_add_auth_params( $params );
 		else throw new Exception('Syntax error; $params is not an array.');
-		parent::__constructor($field, $params);
+		parent::__construct($field, $params);
 	}
 
 
@@ -72,26 +75,36 @@ class SmartyStreetValidator extends Validator {
 	 * @return true|string True if the value was valid, or an error message if not.
 	 */
 	public static function validate( $params ) {
+		echo "smartystreet validating x\n";
 		if ( is_array( $params ) )
 			self::maybe_add_auth_params( $params );
 
-		// account for info
+		print_r( $params );
+
+		// account for params
+		echo "smartystreet accounting for city x\n";
 		if ( !isset($params['city']) || empty($params['city']) )
 			return 'You must specify a city.';
+		echo "smartystreet accounting for state x\n";
 		if ( !isset($params['state']) || empty($params['state']) )
 			return 'You must specify a state.';
-		if ( !isset($params['zip']) || empty($params['zip']) )
+		echo "smartystreet accounting for zipcode x\n";
+		if ( !isset($params['zipcode']) || empty($params['zipcode']) )
 			return 'You must specify a zip code.';
+		echo "smartystreet accounting for id x\n";
 		if ( !isset($params['auth-id']) || empty($params['auth-id']) )
 			return 'The SmartyStreets Auth ID isn\'t specified.';
+		echo "smartystreet accounting for token x\n";
 		if ( !isset($params['auth-token']) || empty($params['auth-token']) )
 			return 'The SmartyStreets Auth Token isn\'t specified.';
+
+		echo "smartystreet preparing request x\n";
 
 		// remove any additional info in the array
 		$params = array_intersect_key( $params, array(
 				'city' => 1,
 				'state' => 1,
-				'zip' => 1,
+				'zipcode' => 1,
 				'auth-id' => 1,
 				'auth-token' => 1,
 			));
@@ -99,14 +112,35 @@ class SmartyStreetValidator extends Validator {
 		// encode for posting to smartystreets
 		$post_input = json_encode( $params );
 
+		/* Curl doesn't seem to be working for me; php_curl.dll just fails to load. */
 		$c = curl_init('https://api.smartystreets.com/zipcode');
 		curl_setopt_array( $c, array(
 				CURLOPT_RETURNTRANSFER => true,
 				CURLOPT_HTTPHEADER => array('Content-type: application/json'),
 				CURLOPT_POSTFIELDS => $post_input
 			) );
+
+		echo "smartystreet performing request x\n";
+
 		// perform the post, get the result
 		$result_json = curl_exec($c);
+		//*/
+
+		/* PECL route:
+		// referenced code:
+		// https://github.com/smartystreets/LiveAddressSamples/blob/master/php/post_optimized_pecl.php
+
+		// TODO: exception handling!
+		$req = new HTTPRequest('https://api.smartystreets.com/zipcode', HTTP_METH_POST);
+		$req->setBody($post_input);
+
+		echo "smartystreet performing request x\n";
+
+		$resp = $req->send();
+		$result_json = $resp->getBody();
+		*/
+
+		echo "smartystreet performed request x\n";
 
 		if ( $result_json === false )
 			return 'Unable to get a result from SmartyStreets at this time.';

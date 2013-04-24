@@ -25,7 +25,7 @@ function request_input_value( $field ) {
  * @param string $field
  */
 function display_feedback( $field, $format = null ) {
-	if ( isset($_SESSION[$field]) && !empty($_SESSION[$field]) ) {
+	if ( isset($_SESSION[$field]) && !empty($_SESSION[$field]) && $_SESSION[$field] !== true ) {
 		if ( is_string($format) && !empty($format) ) {
 			?><span data-debug="<?= $field; ?>"><? printf( $format, $_SESSION[$field] ); ?></span><?
 		} else {

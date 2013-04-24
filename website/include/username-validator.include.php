@@ -20,7 +20,7 @@ class UserNameValidator extends Validator {
 	 *
 	 * @see Validator::__construct($field, $value)
 	 */
-	public function __constructor( $field, $val = null ) {
+	public function __construct( $field, $val = null ) {
 		parent::__construct($field, $val);
 	}
 

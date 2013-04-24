@@ -11,7 +11,7 @@ final class US_States {
 	/**
 	 * Singleton class, no construction allowed.
 	 */
-	private function __constructor() {}
+	private function __construct() {}
 
 	/**
 	 * Array of states, includes state equivelants (as law requires).
