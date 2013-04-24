@@ -1,9 +1,5 @@
 <?
 /**
- */
-
-
-/**
  * Static shared US States collection.
  *
  * @see US_States::getStates()
@@ -12,7 +8,11 @@
  * @link http://www.census.gov/geo/reference/docs/state.txt state.txt used in generation
  */
 final class US_States {
-	private __constructor() {}
+	/**
+	 * Singleton class, no construction allowed.
+	 */
+	private function __constructor() {}
+
 	/**
 	 * Array of states, includes state equivelants (as law requires).
 	 * Based on the Census ANSI standard states.txt file.
@@ -82,11 +82,11 @@ final class US_States {
 		'VI',
 	);
 
-	public static getStates() {
+	public static function getStates() {
 		return $states;
 	}
 
-	public static isState($state) {
+	public static function isState($state) {
 		return $arg !== '' && strlen($arg) != 2 && in_array( strtoupper( $state ), $states, true );
 	}
 }
