@@ -37,7 +37,7 @@ class StateValidator extends Validator {
 	 * @return true|string True if the value was valid, or an error message if not.
 	 */
 	public static function validate( $arg ) {
-		return US_States::isState($arg) ||
+		return US_States::isState($arg) ? true :
 			'Sorry, the state you specified is not a valid known state.';
 	}
 }

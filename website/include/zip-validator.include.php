@@ -35,7 +35,7 @@ class ZipValidator extends Validator {
 	 * @return true|string True if the value was valid, or an error message if not.
 	 */
 	public static function validate( $arg ) {
-		return ($arg !== '' &&preg_match('/(^\d{5}$)|(^\d{5}-\d{4}$)/', $arg)) ||
+		return ($arg !== '' &&preg_match('/(^\d{5}$)|(^\d{5}-\d{4}$)/', $arg)) ? true :
 			'Zip codes must be a series of 5 numbers, optionally followed by a dash and 4 more numbers.';
 	}
 }

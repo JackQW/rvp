@@ -66,6 +66,13 @@ if ( $valid ) {
 			$errno = $istmt->errno;
 			if ( $errno === 0 ) {
 				$_SESSION['registered'] = true;
+				$_SESSION['username'] = $_SESSION['username'];
+				$_SESSION['email'] = $_REQUEST['email'];
+				$_SESSION['firstname'] = $_SESSION['firstname'];
+				$_SESSION['lastname'] = $_SESSION['lastname'];
+				$_SESSION['city'] = $_SESSION['city'];
+				$_SESSION['state'] = $_SESSION['state'];
+				$_SESSION['zip'] = $_SESSION['zip'];
 				$success = true; // woo hoo.
 			} else if ( $errno === 1062 ) { // check which unique constraint got hit
 				// Error: 1062 SQLSTATE: 23000 (ER_DUP_ENTRY)

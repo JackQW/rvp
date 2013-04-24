@@ -1,6 +1,7 @@
 <?
 	session_start();
 
+
 	require_once('include/us-states.include.php');
 
 	header("Content-Type: application/xhtml+xml; charset=utf-8");
@@ -27,9 +28,9 @@ function request_input_value( $field ) {
 function display_feedback( $field, $format = null ) {
 	if ( isset($_SESSION[$field]) && !empty($_SESSION[$field]) && $_SESSION[$field] !== true ) {
 		if ( is_string($format) && !empty($format) ) {
-			?><span data-debug="<?= $field; ?>"><? printf( $format, $_SESSION[$field] ); ?></span><?
+			?><pre data-debug="<?= $field; ?>"><? printf( $format, $_SESSION[$field] ); ?></pre><?
 		} else {
-			?><span data-debug="<?= $field; ?>"><?= $_SESSION[$field]; ?></span><?
+			?><pre data-debug="<?= $field; ?>"><?= $_SESSION[$field]; ?></pre><?
 		}
 	}
 }
@@ -54,7 +55,6 @@ function display_feedback( $field, $format = null ) {
 					<?
 					//print_r( $_SESSION );
 					display_feedback( 'server_status' );
-					display_feedback( 'vfb_server' );
 					display_feedback( 'vfb_firstname' );
 					display_feedback( 'vfb_lastname' );
 					display_feedback( 'vfb_city' );
@@ -62,14 +62,18 @@ function display_feedback( $field, $format = null ) {
 					display_feedback( 'vfb_zip' );
 					display_feedback( 'vfb_email' );
 					display_feedback( 'vfb_username' );
+					display_feedback( 'vfb_password' );
 					display_feedback( 'vfb_smartystreet' );
+					if ( isset($_SESSION['registered']) && $_SESSION['registered'] === true ) {
+						?><span>You've already registered with us!<br/>Feel free to register again though.</span><?
+					}
 					//display_feedback( 'processing_time', 'It took %.3f seconds to process your previous attempt.' );
 					?>
 				</div>
-				<input type="text" name="firstname" autocomplete="given-name" placeholder="First Name" required="true" autofocus="true" <? request_input_value("firstname"); ?> />
-				<input type="text" name="lastname" autocomplete="family-name" placeholder="Last Name" required="true" <? request_input_value("lastname"); ?> />
-				<input type="text" name="city" autocomplete="locality" placeholder="City" required="true" <? request_input_value("city"); ?> />
-				<select name="state" autocomplete="state" required="true">
+				<label>First Name: <input type="text" name="firstname" autocomplete="given-name" placeholder="First Name" required="true" autofocus="true" <? request_input_value("firstname"); ?> /></label>
+				<label>Last Name: <input type="text" name="lastname" autocomplete="family-name" placeholder="Last Name" required="true" <? request_input_value("lastname"); ?> /></label>
+				<label>City: <input type="text" name="city" autocomplete="locality" placeholder="City" required="true" <? request_input_value("city"); ?> /></label>
+				<label>State: <select name="state" autocomplete="state" required="true">
 					<option></option><? // hardcode blank option
 
 					$states = US_States::getStates();
@@ -85,11 +89,11 @@ function display_feedback( $field, $format = null ) {
 						?>><?= $state; ?></option><?
 					}
 				?>
-				</select>
-				<input type="text" name="zip" autocomplete="postal-code" placeholder="Zip Code" required="true" <? request_input_value("zip"); ?> />
-				<input type="email" name="email" autocomplete="email" placeholder="Email Address" required="true" <? request_input_value("email"); ?> />
-				<input type="text" name="username" autocomplete="nickname" placeholder="User Name" required="true" <? request_input_value("username"); ?> />
-				<input type="password" name="password" autocomplete="off" placeholder="Password" required="true" <? request_input_value("password"); ?> />
+				</select></label>
+				<label>Zip Code: <input type="text" name="zip" autocomplete="postal-code" placeholder="Zip Code" required="true" <? request_input_value("zip"); ?> /></label>
+				<label>Email: <input type="email" name="email" autocomplete="email" placeholder="Email Address" required="true" <? request_input_value("email"); ?> /></label>
+				<label>User Name: <input type="text" name="username" autocomplete="nickname" placeholder="User Name" required="true" <? request_input_value("username"); ?> /></label>
+				<label>Password: <input type="password" name="password" autocomplete="off" required="true" <? request_input_value("password"); ?> /></label>
 				<input type="submit" value="Register" />
 			</form>
 		</div>

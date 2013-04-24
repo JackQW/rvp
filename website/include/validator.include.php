@@ -87,7 +87,7 @@ class Validator {
 		}
 		if ( isset($this->value) && !empty($this->value) )
 			$this->validateValue();
-		echo "$this->fieldName: $this->value x \n";
+		//echo "$this->fieldName: $this->value x \n";
 	}
 	
 	/**
@@ -109,7 +109,7 @@ class Validator {
 	public function validateValue() {
 		$this->result = self::validate( $this->value );
 		$vfbfn = "vfb_$this->fieldName";
-		if ( $this->fieldName !== '' && $this->result === true ) {
+		if ( $this->fieldName !== '' && $this->result !== true ) {
 			$_SESSION[ $vfbfn ] = $this->result;
 		} else {
 			unset( $_SESSION[ $vfbfn ] );

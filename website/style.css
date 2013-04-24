@@ -1,0 +1,61 @@
+
+/*
+http://caniuse.com/flexbox
+http://www.html5rocks.com/en/tutorials/flexbox/quick/
+*/
+:root, :root > body {
+	min-height: 100%;
+}
+:root, :root > body {
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+
+input[type="text"], input[type="email"], input[type="password"], select {
+	text-align: left;
+}
+
+:root > body > .box > form > label {
+	display: block;
+	overflow: hidden;
+	width: 320px;
+	padding-bottom: .2rem;
+}
+
+:root > body > .box > form > label > input,
+:root > body > .box > form > label > select {
+	float: right;
+}
+
+:root > body > .box > form > input[type="submit"] {
+	float: right;
+}
+
+:root > body > .box {
+	position: absolute;
+	left: 50%;
+	margin-left: -160px;
+	top: 50%;
+	margin-top: -320px;
+	width: 320px;
+	height: 640px;
+	height: ;
+	overflow: hidden;
+}
+
+#processing-feedback > pre {
+	font-family: sans-serif;
+	white-space: pre-wrap;
+	padding-bottom: .2em;
+}
+#processing-feedback {
+	border-radius: 6px;
+	padding: 6px;
+	background-color: #ffc;
+	margin-bottom: 1em;
+}
+
+#processing-feedback:empty {
+	display: none;
+}

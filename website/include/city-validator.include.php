@@ -34,7 +34,7 @@ class CityValidator extends Validator {
 	 * @return true|string True if the value was valid, or an error message if not.
 	 */
 	public static function validate( $arg ) {
-		return ($arg !== '' && preg_match('/^[[:alpha:]][[:alpha:] ]*$/', $arg)) ||
+		return ($arg !== '' && preg_match('/^[[:alpha:]][[:alpha:] ]*$/', $arg)) ? true :
 			'City must be only letters and spaces, and atleast 1 non-space character long.';
 	}
 }

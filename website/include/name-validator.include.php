@@ -36,7 +36,7 @@ class NameValidator extends Validator {
 	protected static function validate_name( $arg, $type ) {
 		if ( strlen($arg) > 255 )
 			return "Your $type name must be less than 255 characters (for storage reasons).";
-		return ($arg !== '' && preg_match('/^[[:graph:]][[:print:]]*$/', $arg)) ||
+		return ($arg !== '' && preg_match('/^[[:graph:]][[:print:]]*$/', $arg)) ? true :
 			"$type must be only printable characters, and atleast 1 printable character long.\n".
 			"It may not start with a space.";
 	}

@@ -25,7 +25,7 @@
 			<h1>Thank you!</h1>
 			<p>
 				Thank you for registering, <?= $_SESSION['username']; ?>!<br/>
-				It took us <? printf('%.3f', $_SESSION['processing_time']); ?> to process your registration.<br/>
+				It took us <? printf('%.3f', $_SESSION['processing_time']); ?> seconds to process your registration.<br/>
 				Have a nice day!
 			</p>
 		</div>

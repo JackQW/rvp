@@ -42,7 +42,7 @@ class EmailValidator extends Validator {
 	public static function validate( $arg ) {
 		if ( strlen($arg) > 255 )
 			return 'Your email address must be less than 255 characters (for storage reasons).';
-		return ($arg !== '' && filter_var( $arg, FILTER_VALIDATE_EMAIL )) ||
+		return ($arg !== '' && filter_var( $arg, FILTER_VALIDATE_EMAIL )) ? true :
 			'Your email address does not appear to be valid.';
 	}
 }

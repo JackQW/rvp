@@ -87,7 +87,8 @@ final class US_States {
 	}
 
 	public static function isState($state) {
-		return $state !== '' && strlen($state) != 2 && in_array( strtoupper( $state ), self::$states, true );
+		return $state !== '' && strlen($state) === 2 &&
+			in_array( strtoupper( $state ), self::$states, true );
 	}
 }
 

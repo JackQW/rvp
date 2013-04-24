@@ -32,7 +32,7 @@ class UserNameValidator extends Validator {
 	 */
 	public static function validate( $arg ) {
 		// 16 characters; letters numbers underscores
-		return ($arg !== '' && preg_match('/^[[:word:]]{1,16}$/', $arg )) ||
+		return ($arg !== '' && preg_match('/^[[:word:]]{1,16}$/', $arg )) ? true :
 			"Your username must be between 1 and 16 characters (inclusive).\n".
 			"Allowed characters are letters (upper and lowercase) and numbers.";
 	}
