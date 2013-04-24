@@ -42,18 +42,6 @@ class SmartyStreetValidator extends Validator {
 	}
 
 
-	/*
-	Request format (GET URL params, POST JSON object params)
-
-	https://api.smartystreets.com/zipcode
-	city=los+angeles
-	state=california
-	zipcode=90230
-	auth-id=<id>
-	auth-token=<token>
-
-	*/
-
 	/**
 	 * Validates a city, state, and zip code combination.
 	 * This is the static form of the operation of the class.
