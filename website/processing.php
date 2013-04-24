@@ -9,10 +9,10 @@ define('PASSWORD_HASH_SALT','aXK0)@@4z$*1');
 // get current time
 $start_processing = microtime(true);
 
-require_once("includes/validator.include.php");
+require_once("include/validator.include.php");
 
 $valid = true;
-for ( array(
+foreach ( array(
 		Validator::getValidator("UserName", "username" ),
 		Validator::getValidator("Password", "password" ),
 		Validator::getValidator("FirstName", "lastname" ),
@@ -25,7 +25,7 @@ for ( array(
 				'state' => $_REQUEST['state'],
 				'zipcode' => $_REQUEST['zip'],
 			) ),
-		) as $field, $validator ) {
+		) as $field => $validator ) {
 	if ( $validator->valid() !== true )
 		$valid = false;
 }
@@ -49,7 +49,7 @@ if ( $valid ) {
 	} else {
 		// the user insert statement
 		$istmt = null;
-		if ($istmt = $db->prepare('INSERT INTO `user` (`username`, `password`, `email`, `first_name`, `last_name`, `city`, `state`, `zip`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);') {
+		if ($istmt = $db->prepare('INSERT INTO `user` (`username`, `password`, `email`, `first_name`, `last_name`, `city`, `state`, `zip`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);')) {
 			$istmt->bind_param('ssssssss',
 				$_REQUEST['username'], // CHAR(16)
 				md5(PASSWORD_HASH_SALT.$_REQUEST['password'], true), // BINARY(16)
@@ -58,7 +58,7 @@ if ( $valid ) {
 				$_REQUEST['last_name'], // VARCHAR(255)
 				$_REQUEST['city'], // VARCHAR(255)
 				$_REQUEST['state'], // CHAR(2)
-				$_REQUEST['zip'], // CHAR(10)
+				$_REQUEST['zip'] // CHAR(10)
 			);
 
 			$istmt->execute();
@@ -73,13 +73,7 @@ if ( $valid ) {
 			} else if ( $errno === 1169 ) { // check which unique constraint got hit
 				// the unique constraint check statement
 				$cstmt = null;
-				if(!($cstmt = $db->prepare('SELECT COUNT(`username`) AS `uhits` FROM `user` WHERE `username` = ? UNION ALL SELECT COUNT(`email`) AS `uhits` FROM `user` WHERE `email` = ?')) {
-					if ( isset($cstmt) ) {
-						$_SESSION['server_status'] = "An error occurred while trying to prepare the unique constraint check statement:\n\t$cstmt->error";
-					} else {
-						$_SESSION['server_status'] = "Unable to instance a prepared SQL statement. Please report this error.";
-					}
-				} else {
+				if($cstmt = $db->prepare('SELECT COUNT(`username`) AS `uhits` FROM `user` WHERE `username` = ? UNION ALL SELECT COUNT(`email`) AS `uhits` FROM `user` WHERE `email` = ?')) {
 					$cstmt->bind_param('ss',
 						$_REQUEST['username'],
 						$_REQUEST['email'] );
@@ -89,12 +83,19 @@ if ( $valid ) {
 					$username_hits = $cresult;
 					$stmt->fetch();
 					$email_hits = $cresult;
-					if ( $username_hits > 0 )
+					if ( $username_hits > 0 ) {
 						$_SESSION['server_status'] = "Sorry, that User Name was already taken.";
-					else if ( $email_hits > 0 )
+					} else if ( $email_hits > 0 ) {
 						$_SESSION['server_status'] = "Sorry, that Email was already used.";
-					else
-						$_SESSION['server_status'] = "Sorry, an unhandled unique constraint collision occurred."
+					} else {
+						$_SESSION['server_status'] = "Sorry, an unhandled unique constraint collision occurred.";
+					}
+				} else {
+					if ( isset($cstmt) ) {
+						$_SESSION['server_status'] = "An error occurred while trying to prepare the unique constraint check statement:\n\t$cstmt->error";
+					} else {
+						$_SESSION['server_status'] = "Unable to instance a prepared SQL statement. Please report this error.";
+					}
 				}
 			} else {
 				$_SESSION['server_status'] = "Encountered error during SQL transaction:\n\t$istmt->error";
