@@ -107,6 +107,8 @@ if ( $valid ) {
 						$_SESSION['server_status'] = "Sorry, that User Name was already taken.";
 					} else if ( $uniquehit === 'email' ) {
 						$_SESSION['server_status'] = "Sorry, that Email was already used.";
+					} else { // standard wtfever case
+						$_SESSION['server_status'] = "Sorry, that $uniquehit was already used.";
 					}
 				}
 			} else {
